@@ -1,0 +1,35 @@
+{{extends "../layouts/layout.jet"}}
+{{block documentBody()}}
+<div class="container text-left" style="margin:10% auto;">
+    <h2 class="mb-5 text-center">{{ isset(appname) ? appname : "Sign In" }}</h2>
+
+    <div class="row mb-2">
+        <div class="col-12 m-0">
+            <p class="m-0">
+                <strong>
+                    Your IP:
+                </strong>
+                {{ isset(remoteip) ? remoteip : "" }}
+            </p>
+        </div>
+
+        <div class="col-12 m-0">
+            <p class="m-0">
+                <strong>
+                    App Version:
+                </strong>
+                {{ isset(appver) ? appver : "" }}
+            </p>
+        </div>
+
+        <div class="col-12 m-0">
+            <p class="m-0">
+                <strong>
+                    App Date:
+                </strong>
+                {{ isset(appdate) ? appdate : "" }}
+            </p>
+        </div>
+    </div>
+</div>
+{{end}}

@@ -1,0 +1,123 @@
+{{extends "../layouts/layout.jet"}}
+{{block documentBody()}}
+<div class="container text-left" style="margin:10% auto;">
+
+    <div class="grid text-center" style="margin:10% auto;">
+        <div class="row mb-2">
+            <h1>
+                Registration
+            </h1>
+        </div>
+
+        <form action="/register" method="post" class="needs-validation" novalidate>
+
+            <div class="row d-grid gap-4">
+                <div class="col-12">
+                    <div class="mb-3">
+                        <label class="form-label w3-left">
+                            <strong>
+                                First name
+                                {{if .form.Errors.Get("fname")}}
+                                <label class="text-danger"> is required</label>
+                                {{end}}
+                            </strong>
+                        </label>
+
+                        <input type="text" name="fname" value="{{ .registrationform.FirstName }}"
+                            placeholder=" Enter first name" autocomplete="false" class="form-control">
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="mb-3">
+                        <label class="form-label w3-left">
+                            <strong>
+                                Last name
+                                {{if .form.Errors.Get("lname")}}
+                                <label class="text-danger"> {{.form.Errors.Get("lname")}}</label>
+                                {{end}}
+                            </strong>
+                        </label>
+
+                        <input type="text" name="lname" value="{{ .registrationform.LastName}}"
+                            placeholder="Enter last name" autocomplete="false" class="form-control">
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="mb-3">
+                        <label class="form-label w3-left">
+                            <strong>
+                                Email
+                                {{if .form.Errors.Get("email")}}
+                                <label class="text-danger"> {{.form.Errors.Get("email")}}</label>
+                                {{end}}
+                            </strong>
+                        </label>
+
+                        <input type="email" name="email" value="{{ .registrationform.Email}}"
+                            placeholder="Enter email address" autocomplete="false" class="form-control">
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="mb-3">
+                        <label class="form-label w3-left">
+                            <strong>
+                                Phone
+                                {{if .form.Errors.Get("phone")}}
+                                <label class="text-danger"> {{ .form.Errors.Get("phone") }}</label>
+                                {{end}}
+                            </strong>
+                        </label>
+
+                        <input type="phone" name="phone" value="{{ .registrationform.Phone}}"
+                            placeholder="Enter phone number" autocomplete="false" class="form-control">
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="mb-3">
+                        <label class="form-label w3-left">
+                            <strong>
+                                Create password
+                                {{if .form.Errors.Get("pwd1")}}
+                                <label class="text-danger"> {{.form.Errors.Get("pwd1")}}</label>
+                                {{end}}
+                            </strong>
+                        </label>
+
+                        <input type="password" name="pwd1" value="{{ .registrationform.PasswordCreate}}"
+                            placeholder="Create a password" autocomplete="true" class="form-control">
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="mb-3">
+                        <label class="form-label w3-left">
+                            <strong>
+                                Confirm password
+                                {{if .form.Errors.Get("pwd2")}}
+                                <label class="text-danger"> {{.form.Errors.Get("pwd2")}}</label>
+                                {{end}}
+                            </strong>
+                        </label>
+
+                        <input type="password" name="pwd2" value="{{ .registrationform.PasswordConfirm}}"
+                            placeholder="Confirm the password" autocomplete="true" class="form-control">
+                    </div>
+                </div>
+
+
+                <input type="hidden" name="csrf_token" value="{{ .csrftoken }}" class="form-control">
+
+                <div class="col-12">
+                    <div class="input-group">
+                        <input class="w3-btn w3-blue w3-ripple w3-round-large" type="submit" value="Sign Up">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{{end}}

@@ -1,0 +1,36 @@
+{{extends "../layouts/layout.jet"}}
+{{block documentBody()}}
+<div class="grid text-center" style="margin:10% auto;">
+    <div class="row mb-2">
+        <h2 class="mb-5">{{ isset(headingOne) ? headingOne : "Sign In" }}</h2>
+    </div>
+
+    <div class="mb-4">
+        <p>
+            <strong>
+                {{ isset(statement) ? statement : "" }}
+            </strong>
+        </p>
+    </div>
+
+    <form class="m-3 p-3">
+        <div class="input-group pb-3">
+            <span class="input-group-text">
+                <i class="bi bi-person-fill"></i>
+            </span>
+
+            <input type="text" name="email" class="form-control" placeholder="Enter email address here"
+                autocomplete="false" required>
+        </div>
+
+        <div class="input-group pt-3">
+            <span class="input-group-text">
+                <i class="bi bi-lock-fill"></i>
+            </span>
+
+            <input type="password" name="password" class="form-control" placeholder="Enter password here"
+                autocomplete="false" required>
+        </div>
+    </form>
+</div>
+{{end}}

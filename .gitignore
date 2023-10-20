@@ -1,0 +1,7 @@
+*.txt
+*.env
+.env
+go*
+mwa
+scratch*
+node_modules
