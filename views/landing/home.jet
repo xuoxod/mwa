@@ -2,34 +2,52 @@
 {{block documentBody()}}
 <div class="grid text-center" style="margin:10% auto;">
     <div class="row mb-2">
-        <h2 class="mb-5">{{ isset(headingOne) ? headingOne : "Sign In" }}</h2>
+        <h2 class="mb-5">Signin</h2>    
     </div>
 
-    <div class="mb-4">
-        <p>
-            <strong>
-                {{ isset(statement) ? statement : "" }}
-            </strong>
-        </p>
-    </div>
+    <form action="/" method="post" class="needs-validation" novalidate>
 
-    <form class="m-3 p-3">
-        <div class="input-group pb-3">
-            <span class="input-group-text">
-                <i class="bi bi-person-fill"></i>
-            </span>
+        <div class="row d-grid gap-4">
+            <div class="col-12">
+                <div class="mb-3">
+                    <label class="form-label w3-left">
+                        <strong>
+                            Email
+                            {{if .form.Errors.Get("email")}}
+                            <label class="text-danger"> {{.form.Errors.Get("email")}}</label>
+                            {{end}}
+                        </strong>
+                    </label>
 
-            <input type="text" name="email" class="form-control" placeholder="Enter email address here"
-                autocomplete="false" required>
-        </div>
+                    <input type="email" name="email" value="{{ .signinform.Email}}" placeholder="Enter email address"
+                        autocomplete="false" class="form-control">
+                </div>
+            </div>
 
-        <div class="input-group pt-3">
-            <span class="input-group-text">
-                <i class="bi bi-lock-fill"></i>
-            </span>
 
-            <input type="password" name="password" class="form-control" placeholder="Enter password here"
-                autocomplete="false" required>
+            <div class="col-12">
+                <div class="mb-3">
+                    <label class="form-label w3-left">
+                        <strong>
+                            Password
+                            {{if .form.Errors.Get("password")}}
+                            <label class="text-danger"> {{.form.Errors.Get("password")}}</label>
+                            {{end}}
+                        </strong>
+                    </label>
+
+                    <input type="password" name="password" value="{{ .signinform.Password}}" placeholder="Enter password"
+                        autocomplete="true" class="form-control">
+                </div>
+            </div>
+
+            <input type="hidden" name="csrf_token" value="{{ .csrftoken }}" class="form-control">
+
+            <div class="col-12">
+                <div class="input-group">
+                    <input class="w3-btn w3-blue w3-ripple w3-round-large" type="submit" value="Sign In">
+                </div>
+            </div>
         </div>
     </form>
 </div>

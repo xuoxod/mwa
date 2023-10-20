@@ -41,14 +41,21 @@ func NewHandler(r *Respository) {
 
 func (m *Respository) Home(w http.ResponseWriter, r *http.Request) {
 	remoteIP := r.RemoteAddr
+	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
+
 	vars := make(jet.VarMap)
 	vars.Set("title", "Home")
 	vars.Set("headingOne", `Welcome to my Awesome Web App`)
 	vars.Set("statement", `We don't Fuck around ... Either sign in to start using the site or register first then sign in.`)
 
-	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
+	var emptySigninForm models.Signin
 
-	err := RenderPage(w, "landing/home.jet", vars)
+	data := make(map[string]interface{})
+	data["csrftoken"] = nosurf.Token(r)
+	data["signinform"] = emptySigninForm
+	data["form"] = forms.New(nil)
+
+	err := RenderPageWithContext(w, "landing/home.jet", vars, data)
 
 	if err != nil {
 		log.Println(err.Error())
@@ -135,6 +142,47 @@ func (m *Respository) PostRegister(w http.ResponseWriter, r *http.Request) {
 	} else {
 		// Create new user in the database
 
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	}
+}
+
+func (m *Respository) PostSignin(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Post Signin")
+	err := r.ParseForm()
+
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	signinform := models.Signin{
+		Email:    r.Form.Get("email"),
+		Password: r.Form.Get("password"),
+	}
+
+	fmt.Println("Signin posted")
+
+	form := forms.New(r.PostForm)
+	form.Required("email", "password")
+	form.IsEmail("email")
+
+	if !form.Valid() {
+		fmt.Println(form.Errors)
+
+		vars := make(jet.VarMap)
+		vars.Set("title", "Home")
+
+		data := make(map[string]interface{})
+		data["csrftoken"] = nosurf.Token(r)
+		data["signinform"] = signinform
+		data["form"] = form
+
+		err := RenderPageWithContext(w, "landing/home.jet", vars, data)
+
+		if err != nil {
+			log.Println(err.Error())
+		}
+	} else {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 }
