@@ -1,8 +1,8 @@
 {{extends "../layouts/layout.jet"}}
 {{block documentBody()}}
-<div class="grid text-center" style="margin:10% auto;">
+<div class="grid text-center" style="margin:1% auto;">
     <div class="row mb-2">
-        <h2 class="mb-5">Signin</h2>    
+        <h2 class="mb-5">Signin</h2>
     </div>
 
     <form action="/" method="post" class="needs-validation" novalidate>
@@ -36,8 +36,8 @@
                         </strong>
                     </label>
 
-                    <input type="password" name="password" value="{{ .signinform.Password}}" placeholder="Enter password"
-                        autocomplete="true" class="form-control">
+                    <input type="password" name="password" value="{{ .signinform.Password}}"
+                        placeholder="Enter password" autocomplete="true" class="form-control">
                 </div>
             </div>
 
