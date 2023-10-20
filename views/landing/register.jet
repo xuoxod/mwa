@@ -2,9 +2,7 @@
 {{block documentBody()}}
 <div class="grid text-center" style="margin:1% auto;">
     <div class="row mb-2">
-        <h2 class="mb-5">
-            Registration
-        </h2>
+        <h2 class="mb-5">Registration</h2>
     </div>
 
     <form action="/register" method="post" class="needs-validation" novalidate>
