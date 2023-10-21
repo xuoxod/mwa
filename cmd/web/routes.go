@@ -18,11 +18,13 @@ func routes() http.Handler {
 	fileserver := http.FileServer(http.Dir("./static/"))
 	mux.Handle("/static/", http.StripPrefix("/static", fileserver))
 
-	mux.Get("/", handlers.Repo.Home)
-	mux.Get("/about", handlers.Repo.About)
-	mux.Get("/register", handlers.Repo.Register)
-	mux.Post("/register", handlers.Repo.PostRegister)
-	mux.Post("/", handlers.Repo.PostSignin)
+	mux.Route("/", func(mux chi.Router) {
+		mux.Get("/", handlers.Repo.Home)
+		mux.Get("/about", handlers.Repo.About)
+		mux.Get("/register", handlers.Repo.Register)
+		mux.Post("/register", handlers.Repo.PostRegister)
+		mux.Post("/", handlers.Repo.PostSignin)
+	})
 
 	mux.Route("/user", func(mux chi.Router) {
 		mux.Get("/", handlers.Repo.Dashboard)
