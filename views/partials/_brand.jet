@@ -1,0 +1,7 @@
+{{block brand()}}
+<div class="badge bg-primary text-wrap text-center m-auto d-inline-grid" style="width: auto;">
+    <p class="m-0 p-0">
+        RmediaTech
+    </p>
+</div>
+{{end}}
