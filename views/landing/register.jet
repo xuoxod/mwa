@@ -14,7 +14,7 @@
                         <strong>
                             First name
                             {{if .form.Errors.Get("fname")}}
-                            <label class="text-danger"> is required</label>
+                            <label class="text-danger"> {{.form.Errors.Get("fname")}}</label>
                             {{end}}
                         </strong>
                     </label>
