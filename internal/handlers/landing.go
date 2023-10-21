@@ -185,6 +185,8 @@ func (m *Respository) PostSignin(w http.ResponseWriter, r *http.Request) {
 			log.Println(err.Error())
 		}
 	} else {
+		// Put user in session
+
 		http.Redirect(w, r, "/user", http.StatusSeeOther)
 	}
 }
