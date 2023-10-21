@@ -1,0 +1,32 @@
+{{extends "../layouts/layout.jet"}}
+{{block documentBody()}}
+<div class="grid text-center gap-auto border rounded" style="margin: auto;">
+    <div class="row">
+        <div class="col-md-2 d-md-grid d-sm-none">
+            <ul class="list-group nav flex-column">
+                <li class="list-group-item nav-item">{{ipaddress}}</li>
+                <li class="list-group-item nav-item">A second item</li>
+                <li class="list-group-item nav-item">A third item</li>
+                <li class="list-group-item nav-item">A fourth item</li>
+                <li class="list-group-item nav-item">And a fifth one</li>
+            </ul>
+        </div>
+
+        <div class="col-md-10 d-inline-grid col-sm-12">
+            <div class="row" style="width:100%;">
+                <div class="col-md-4 col-sm-12 border rounded">
+                    <h2>Column One</h2>
+                </div>
+
+                <div class="col-md-4 col-sm-12 border rounded">
+                    <h2>Column Two</h2>
+                </div>
+
+                <div class="col-md-4 col-sm-12 border rounded">
+                    <h2>Column Three</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}

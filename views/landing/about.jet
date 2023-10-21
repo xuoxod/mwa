@@ -1,6 +1,6 @@
 {{extends "../layouts/layout.jet"}}
 {{block documentBody()}}
-<div class="container text-left" style="margin:10% auto;">
+<div class="container text-left" style="margin: auto;">
     <h2 class="mb-5 text-center">{{ isset(appname) ? appname : "Sign In" }}</h2>
 
     <div class="row mb-2">

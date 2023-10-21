@@ -24,5 +24,9 @@ func routes() http.Handler {
 	fileserver := http.FileServer(http.Dir("../../static/"))
 	mux.Handle("/static/", http.StripPrefix("/static", fileserver))
 
+	mux.Route("/user", func(mux chi.Router) {
+		mux.Get("/dashboard", handlers.Repo.Dashboard)
+	})
+
 	return mux
 }

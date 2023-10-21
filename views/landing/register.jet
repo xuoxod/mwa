@@ -9,7 +9,7 @@
 
         <div class="row d-grid gap-4">
             <div class="col-12">
-                <div class="mb-3">
+                <div class="mb-1">
                     <label class="form-label w3-left">
                         <strong>
                             First name
@@ -25,7 +25,7 @@
             </div>
 
             <div class="col-12">
-                <div class="mb-3">
+                <div class="mb-1">
                     <label class="form-label w3-left">
                         <strong>
                             Last name
@@ -41,7 +41,7 @@
             </div>
 
             <div class="col-12">
-                <div class="mb-3">
+                <div class="mb-1">
                     <label class="form-label w3-left">
                         <strong>
                             Email
@@ -57,7 +57,7 @@
             </div>
 
             <div class="col-12">
-                <div class="mb-3">
+                <div class="mb-1">
                     <label class="form-label w3-left">
                         <strong>
                             Phone
@@ -73,7 +73,7 @@
             </div>
 
             <div class="col-12">
-                <div class="mb-3">
+                <div class="mb-1">
                     <label class="form-label w3-left">
                         <strong>
                             Create password
@@ -89,7 +89,7 @@
             </div>
 
             <div class="col-12">
-                <div class="mb-3">
+                <div class="mb-1">
                     <label class="form-label w3-left">
                         <strong>
                             Confirm password

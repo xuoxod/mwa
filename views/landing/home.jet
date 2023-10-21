@@ -1,6 +1,6 @@
 {{extends "../layouts/layout.jet"}}
 {{block documentBody()}}
-<div class="grid text-center" style="margin:1% auto;">
+<div class="grid text-center" style="margin: auto;">
     {{ if headingOne }}
     <h2 class="row m-0 p-0 lh-1 rounded text-primary-emphasis text-center">
         <p class="m-0 p-3">{{headingOne}}</p>
