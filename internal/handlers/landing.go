@@ -185,7 +185,7 @@ func (m *Respository) PostSignin(w http.ResponseWriter, r *http.Request) {
 			log.Println(err.Error())
 		}
 	} else {
-		http.Redirect(w, r, "/user/dashboard", http.StatusSeeOther)
+		http.Redirect(w, r, "/user", http.StatusSeeOther)
 	}
 }
 

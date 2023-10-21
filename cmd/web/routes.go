@@ -25,7 +25,7 @@ func routes() http.Handler {
 	mux.Handle("/static/", http.StripPrefix("/static", fileserver))
 
 	mux.Route("/user", func(mux chi.Router) {
-		mux.Get("/dashboard", handlers.Repo.Dashboard)
+		mux.Get("/", handlers.Repo.Dashboard)
 	})
 
 	return mux
