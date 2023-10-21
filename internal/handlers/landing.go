@@ -45,7 +45,7 @@ func (m *Respository) Home(w http.ResponseWriter, r *http.Request) {
 
 	vars := make(jet.VarMap)
 	vars.Set("title", "Home")
-	vars.Set("headingOne", `Welcome to my Awesome Web App`)
+	vars.Set("headingOne", `Welcome to Awesome Web App`)
 	vars.Set("statement", `We don't Fuck around ... Either sign in to start using the site or register first then sign in.`)
 
 	var emptySigninForm models.Signin
@@ -171,7 +171,7 @@ func (m *Respository) PostSignin(w http.ResponseWriter, r *http.Request) {
 
 		vars := make(jet.VarMap)
 		vars.Set("title", "Home")
-		vars.Set("headingOne", `Welcome to my Awesome Web App`)
+		vars.Set("headingOne", `Welcome to Awesome Web App`)
 		vars.Set("statement", `We don't Fuck around ... Either sign in to start using the site or register first then sign in.`)
 
 		data := make(map[string]interface{})
