@@ -15,7 +15,7 @@ func routes() http.Handler {
 	mux.Use(NoSurf)
 	mux.Use(SessionLoad)
 
-	fileserver := http.FileServer(http.Dir("../../static/"))
+	fileserver := http.FileServer(http.Dir("./static/"))
 	mux.Handle("/static/", http.StripPrefix("/static", fileserver))
 
 	mux.Get("/", handlers.Repo.Home)
