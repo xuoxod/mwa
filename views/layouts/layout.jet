@@ -239,14 +239,14 @@
         // text string: the message to user
         // icon built-in: success, warning, error, info or question
         // btnText string: button's text
-        const modal = (title, text, icon, btnText = "Okay") => {
+        const modal = (title, text, icon, btnText = "Okay", btnClose = true, showStatus = true) => {
             Swal.fire({
                 title: title,
                 text: text,
                 icon: icon,
                 confirmButtonText: btnText,
-                showCloseButton: true,
-                showLoading: true
+                showCloseButton: btnClose,
+                showLoading: showStatus
             });
         };
 
@@ -273,6 +273,13 @@
             const para = newElement("p");
             para.innerHTML = `${message}`;
         }
+
+        const handleAlert = data => {
+            const title = data.title;
+            const message = data.message;
+            const level = data.level;
+            modal(title, message, level);
+        };
 
         const handleComfirmation = data => {
             log(`Server confirmed my connection\n`);
