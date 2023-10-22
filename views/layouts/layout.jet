@@ -322,6 +322,9 @@
                             populateUserList(data);
                             break;
 
+                        case "alert":
+                            handlerAlert(data);
+                            break;
                     }
                 }
 

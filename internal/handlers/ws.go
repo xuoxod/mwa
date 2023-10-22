@@ -9,7 +9,9 @@ import (
 )
 
 var wsChan = make(chan WsPayload)
-var clients = make(map[WebSocketConnection][]string)
+
+// var clients = make(map[WebSocketConnection][]string)
+var clients = make(map[WebSocketConnection]map[string]string)
 
 var upgradeConnection = websocket.Upgrader{
 	ReadBufferSize:  1024,
@@ -32,6 +34,8 @@ type WsJsonResponse struct {
 	From             string                 `json:"from"`
 	To               string                 `json:"to"`
 	ID               string                 `json:"id"`
+	Title            string                 `json:"title"`
+	Level            string                 `json:"level"`
 }
 
 type ClientResponse struct {
@@ -66,7 +70,15 @@ func (m *Respository) WsEndpoint(w http.ResponseWriter, r *http.Request) {
 	response.Action = "initialconnection"
 
 	conn := WebSocketConnection{Conn: ws}
-	clients[conn] = []string{fmt.Sprintf("%v", conn.RemoteAddr())}
+	strMap := make(map[string]string)
+	strMap["id"] = fmt.Sprintf("%v", conn.RemoteAddr())
+	clients[conn] = strMap
+
+	for client := range clients {
+		arr := clients[client]
+
+		fmt.Println("Client ID:\t", arr["id"])
+	}
 
 	err = ws.WriteJSON(response)
 
@@ -155,7 +167,6 @@ func getConnectedClients() []string {
 
 func broadcastToAll(response WsJsonResponse) {
 	for client := range clients {
-		fmt.Println("client:\t", client)
 		err := client.WriteJSON(response)
 
 		if err != nil {
