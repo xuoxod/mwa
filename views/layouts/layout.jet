@@ -255,6 +255,18 @@
     {{ if (isset(dashboard) ? true : false) }}
     <script>
         let socket = null;
+        const idInput = document.querySelector("#id");
+        const idComp = document.querySelector("#ipaddress")
+        const chatWindow = document.querySelector("#chat-window");
+        const chatWindowToggle = document.querySelector("#chat-window-toggle");
+        const submitButton = document.querySelector("#submit-button");
+        const registerGroup = document.querySelector("#register-group");
+        const usernameInput = document.querySelector("#username-input");
+        const sendMessageGroup = document.querySelector("#send-message-group");
+        const sendMButton = document.querySelector("#send-button");
+        const messageInput = document.querySelector("#message-input");
+        const userNameInput = document.querySelector("#username");
+
 
         const populateUserList = data => {
             log(`Server refreshed client list\n`);
@@ -281,12 +293,26 @@
             modal(title, message, level);
         };
 
+        const handleBadUsername = data => {
+            log("username is bad");
+            const title = data.title;
+            const level = data.level;
+            const message = data.message;
+
+            modal(title, message, level);
+        };
+
+        const handleGoodUsername = data => {
+            const username = data.message;
+            userNameInput.value = username;
+            registerGroup.classList.add("d-none");
+            sendMessageGroup.classList.remove("d-none");
+        };
+
         const handleComfirmation = data => {
             log(`Server confirmed my connection\n`);
             const id = data.id;
             const clients = data.connected_clients;
-            const idInput = document.querySelector("#id");
-            const idComp = document.querySelector("#ipaddress")
 
             idInput.value = id;
             idComp.innerText = `${id}`;
@@ -332,6 +358,14 @@
                         case "alert":
                             handlerAlert(data);
                             break;
+
+                        case "badusername":
+                            handleBadUsername(data);
+                            break;
+
+                        case "goodusername":
+                            handleGoodUsername(data);
+                            break;
                     }
                 }
 
@@ -348,6 +382,32 @@
             socket.send(JSON.stringify(jsonData));
         };
 
+        function toggleShowChatWindow() {
+            if (chatWindow.classList.contains("d-none")) {
+                chatWindow.classList.remove("d-none");
+                chatWindow.classList.add("d-flex");
+                chatWindowToggle.innerText = "Hide Chat";
+            } else {
+                chatWindow.classList.remove("d-flex");
+                chatWindow.classList.add("d-none");
+                chatWindowToggle.innerText = "Show Chat";
+            }
+        }
+
+        chatWindowToggle.addEventListener("click", () => {
+            toggleShowChatWindow();
+        });
+
+        submitButton.addEventListener("click", () => {
+            if (usernameInput.value) {
+                const jsonData = {};
+                jsonData.action = "username";
+                jsonData.message = usernameInput.value;
+                jsonData.id = idInput.value
+                socket.send(stringify(jsonData));
+                usernameInput.value = "";
+            }
+        });
     </script>
     {{end}}
 </body>

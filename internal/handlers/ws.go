@@ -53,6 +53,7 @@ type WsPayload struct {
 	Action   string              `json:"action"`
 	Message  string              `json:"message"`
 	Username string              `json:"username"`
+	ID       string              `json:"id"`
 	Conn     WebSocketConnection `json:"-"`
 }
 
@@ -134,9 +135,44 @@ func ListenToWsChannel() {
 			response.ConnectedClients = clients
 			response.Action = "clients"
 			broadcastToAll(response)
+
+		case "username":
+			username := e.Message
+			id := e.ID
+
+			fmt.Printf("Client submitted their username and ID\n\t%s\n\t%s", username, id)
+
+			checkUsernameExists(e.Conn, username, id)
 		}
 	}
 
+}
+
+func checkUsernameExists(conn WebSocketConnection, username string, id string) {
+	var response WsJsonResponse
+
+	for client := range clients {
+		dict := clients[client]
+
+		if dict["id"] != id {
+			if username == dict["username"] {
+				response.Action = "badusername"
+				response.Title = "Username Error"
+				response.Level = "error"
+				response.Message = fmt.Sprintf("Username %s is already taken", username)
+				sendToClient(conn, response)
+				return
+			}
+
+		}
+	}
+
+	dict := clients[conn]
+	dict["username"] = username
+
+	response.Action = "goodusername"
+	response.Message = username
+	sendToClient(conn, response)
 }
 
 func removeClient(conn WebSocketConnection) {
