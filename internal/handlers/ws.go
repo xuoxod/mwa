@@ -4,16 +4,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"sort"
 
 	"github.com/gorilla/websocket"
-	"github.com/xuoxod/mwa/pkg/utils"
 )
 
 var wsChan = make(chan WsPayload)
-var clients = make(map[WebSocketConnection]string)
-var clientList = make(map[string]interface{})
-var println = utils.Print
+var clients = make(map[WebSocketConnection][]string)
 
 var upgradeConnection = websocket.Upgrader{
 	ReadBufferSize:  1024,
@@ -28,6 +24,17 @@ type WebSocketConnection struct {
 }
 
 type WsJsonResponse struct {
+	Action           string                 `json:"action"`
+	Message          string                 `json:"message"`
+	MessageType      string                 `json:"message_type"`
+	ConnectedClients []string               `json:"connected_clients"`
+	Clients          map[string]interface{} `json:"clients"`
+	From             string                 `json:"from"`
+	To               string                 `json:"to"`
+	ID               string                 `json:"id"`
+}
+
+type ClientResponse struct {
 	Action         string                 `json:"action"`
 	Message        string                 `json:"message"`
 	MessageType    string                 `json:"message_type"`
@@ -59,7 +66,7 @@ func (m *Respository) WsEndpoint(w http.ResponseWriter, r *http.Request) {
 	response.Action = "initialconnection"
 
 	conn := WebSocketConnection{Conn: ws}
-	clients[conn] = ""
+	clients[conn] = []string{fmt.Sprintf("%v", conn.RemoteAddr())}
 
 	err = ws.WriteJSON(response)
 
@@ -98,89 +105,57 @@ func ListenToWsChannel() {
 		e := <-wsChan
 
 		switch e.Action {
-		case "username":
-			// get a list of all users and send it back via broadcast
-			clients[e.Conn] = e.Username
-			users := getUserList()
-			response.Action = "list_users"
-			response.ConnectedUsers = users
-			broadcastToAll(response)
+		case "initialconnection":
+			response.Action = "confirmed"
+			response.ID = fmt.Sprintf("%v", e.Conn.RemoteAddr())
+			sendToClient(e.Conn, response)
 
 		case "left":
-			response.Action = "list_users"
-			delete(clients, e.Conn)
-			users := getUserList()
-			response.ConnectedUsers = users
-			broadcastToAll(response)
-
-		case "broadcast":
-			response.Action = "broadcast"
-			response.Message = fmt.Sprintf("<strong>%s</strong>:\t%s", e.Username, e.Message)
-			response.From = e.Username
-			broadcastToAll(response)
-
-		case "initialconnection":
+			removeClient(e.Conn)
+			clients := getConnectedClients()
+			response.ConnectedClients = clients
 			response.Action = "clients"
-			users := getUserList()
-			response.ConnectedUsers = users
-			response.Message = "You're connected"
 			broadcastToAll(response)
 
-		case "ipaddress":
-			ip := e.Message
-			clientDetails := make(map[string]interface{})
-			clientDetails["address"] = ip
-			clientDetails["conn"] = e.Conn
-			clientList[ip] = clientDetails
-			fmt.Println("Received Client's IP address:\t", ip)
-
-			response.Action = "confirmed"
-			response.ID = ip
-			broadcastToClient(&e.Conn, response, ip)
-
-			clients[e.Conn] = ip
-			users := getUserList()
-			response.Action = "list_users"
-			response.ConnectedUsers = users
+		case "thankyou":
+			clients := getConnectedClients()
+			response.ConnectedClients = clients
+			response.Action = "clients"
 			broadcastToAll(response)
-
-		}
-
-		// response.Action = "Got here"
-		// response.Message = fmt.Sprintf("Some message and action was %s ", e.Action)
-		// broadcastToAll(response)
-	}
-}
-
-func getUserList() []string {
-	var userList []string
-
-	for _, c := range clients {
-		if c != "" {
-			userList = append(userList, c)
 		}
 	}
 
-	sort.Strings(userList)
-
-	return userList
 }
 
-func broadcastToClient(client *WebSocketConnection, response WsJsonResponse, id string) {
-	err := client.WriteJSON(response)
+func removeClient(conn WebSocketConnection) {
+	delete(clients, conn)
+}
+
+func sendToClient(conn WebSocketConnection, response WsJsonResponse) {
+	err := conn.WriteJSON(response)
 
 	if err != nil {
+		log.Println("Error send response to client:\t", err.Error())
 
-		log.Println("Web socket error")
+		_ = conn.Close()
 
-		_ = client.Close()
-
-		delete(clientList, id)
+		delete(clients, conn)
 	}
+}
+
+func getConnectedClients() []string {
+	members := []string{}
+
+	for c := range clients {
+		members = append(members, c.RemoteAddr().String())
+	}
+
+	return members
 }
 
 func broadcastToAll(response WsJsonResponse) {
 	for client := range clients {
+		fmt.Println("client:\t", client)
 		err := client.WriteJSON(response)
 
 		if err != nil {

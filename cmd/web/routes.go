@@ -5,7 +5,7 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
-	"github.com/xuoxod/mwa/internal/handlers"
+	"github.com/xuoxod/mylibs/mwa/internal/handlers"
 )
 
 func routes() http.Handler {

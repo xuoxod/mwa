@@ -30,10 +30,10 @@
                     <div class="container text-left">
                         <div class="row">
                             <div class="input-group">
-                                <span class="input-group-text">
+                                <span class="input-group-text fw-bold text-white bg-primary">
                                     ID
                                 </span>
-                                <input id="id" class="form-control" type="text" autocomplete="off" readonly>
+                                <input id="id" class="form-control fw-bold" type="text" autocomplete="off" readonly>
                             </div>
                         </div>
                     </div>

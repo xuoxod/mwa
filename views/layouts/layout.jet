@@ -256,22 +256,15 @@
     <script>
         let socket = null;
 
+        const populateUserList = data => {
+            log(`Server refreshed client list\n`);
 
-        const populateUserList = list => {
+            const list = data.connected_clients;
             const userList = document.querySelector("#user-list");
             const onlineUsers = getElement("#online-users");
-
-            log(`Received message from server\n`);
-
             if (list) {
-                log(`User Count:\t${list.length}\n`)
                 onlineUsers.innerHTML = `<span class="fs-3"><strong>${list.length}</strong></span>`;
             }
-        };
-
-        const listClients = msg => {
-            log(`Received response from server:\t${stringify(msg)}`);
-
         };
 
         const handleBroadcast = (data) => {
@@ -282,28 +275,21 @@
         }
 
         const handleComfirmation = data => {
-            log(`Server confirmed my details\n`);
+            log(`Server confirmed my connection\n`);
             const id = data.id;
-
+            const clients = data.connected_clients;
             const idInput = document.querySelector("#id");
+            const idComp = document.querySelector("#ipaddress")
 
             idInput.value = id;
-        };
-
-        const sendIp = () => {
-            log(`Server acknowledged connection`);
-            const ipAddress = getElement("#ipaddress").innerText;
-            log(`Sending IP address:\t${ipAddress}`);
-            if (ipAddress) {
-                const data = {};
-                data.action = "ipaddress";
-                data.message = ipAddress;
-                socket.send(stringify(data));
-            }
+            idComp.innerText = `${id}`;
+            const jsonData = {};
+            jsonData.action = "thankyou";
+            socket.send(stringify(jsonData));
         };
 
         document.addEventListener("DOMContentLoaded", function () {
-            socket = new WebSocket("ws://192.168.1.44:8080/ws");
+            socket = new WebSocket("ws://192.168.1.47:8080/ws");
 
             socket.onopen = () => {
                 log("Successfully connected");
@@ -324,29 +310,18 @@
             socket.onmessage = msg => {
                 let data = JSON.parse(msg.data);
                 const action = data.action;
-                const users = data.connected_users
+                const users = data.connected_clients;
 
                 if (action) {
                     switch (action) {
-                        case "list_users":
-                            populateUserList(users);
-                            break;
-
-                        case "broadcast":
-                            handleBroadcast(data);
-                            break;
-
-                        case "initialconnection":
-                            sendIp();
+                        case "confirmed":
+                            handleComfirmation(data)
                             break;
 
                         case "clients":
-                            listClients(data)
+                            populateUserList(data);
                             break;
 
-                        case "confirmed":
-                            handleComfirmation(data);
-                            break;
                     }
                 }
 

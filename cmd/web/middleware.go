@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/justinas/nosurf"
-	"github.com/xuoxod/mwa/internal/helpers"
+	"github.com/xuoxod/mylibs/mwa/internal/helpers"
 )
 
 func WriteToConsole(next http.Handler) http.Handler {

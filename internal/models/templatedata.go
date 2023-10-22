@@ -1,8 +1,6 @@
 package models
 
-import (
-	"github.com/xuoxod/mwa/internal/forms"
-)
+import "github.com/xuoxod/mylibs/mwa/internal/forms"
 
 // Holds data sent from handler to template
 type TemplateData struct {

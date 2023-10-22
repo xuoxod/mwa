@@ -7,11 +7,11 @@ import (
 
 	"github.com/CloudyKit/jet/v6"
 	"github.com/justinas/nosurf"
-	"github.com/xuoxod/mwa/internal/config"
-	"github.com/xuoxod/mwa/internal/forms"
-	"github.com/xuoxod/mwa/internal/helpers"
-	"github.com/xuoxod/mwa/internal/models"
-	"github.com/xuoxod/mwa/pkg/utils"
+	"github.com/xuoxod/mylibs/mwa/internal/config"
+	"github.com/xuoxod/mylibs/mwa/internal/forms"
+	"github.com/xuoxod/mylibs/mwa/internal/helpers"
+	"github.com/xuoxod/mylibs/mwa/internal/models"
+	"github.com/xuoxod/mylibs/mwa/pkg/utils"
 )
 
 var views = jet.NewSet(

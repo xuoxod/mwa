@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"runtime/debug"
 
-	"github.com/xuoxod/mwa/internal/config"
+	"github.com/xuoxod/mylibs/mwa/internal/config"
 )
 
 var app *config.AppConfig
