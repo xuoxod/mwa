@@ -15,3 +15,7 @@ func DateTimeStamp() string {
 
 	return fmt.Sprintf("%v/%v/%v", month, day, year)
 }
+
+func Print(msg string) {
+	fmt.Println(msg)
+}

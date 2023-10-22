@@ -9,12 +9,12 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/xuoxod/mwa/internal/config"
 	"github.com/xuoxod/mwa/internal/handlers"
-	"github.com/xuoxod/mwa/internal/models"
 )
 
 // Application configuration
 var app config.AppConfig
-var templateData models.TemplateData
+
+// var templateData models.TemplateData
 var session *scs.SessionManager
 var infoLog *log.Logger
 var errorLog *log.Logger
@@ -44,6 +44,8 @@ func main() {
 
 	// Set the app level session
 	app.Session = session
+
+	go handlers.ListenToWsChannel()
 
 	mux := routes()
 

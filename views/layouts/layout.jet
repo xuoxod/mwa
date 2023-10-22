@@ -43,6 +43,10 @@
     <script>
         const log = (msg) => console.log(msg);
 
+        const stringify = (obj) => JSON.stringify(obj);
+
+        const parser = (strObj) => JSON.parse(strObj);
+
         const addHandler = (theElement, whichEvent, method) => {
             if (null != theElement && null != whichEvent && typeof method == "function") {
                 theElement.addEventListener(whichEvent, method);
@@ -247,9 +251,120 @@
         };
 
     </script>
-    <!-- <script src="/static/js/utils.js" type="text/javascript"></script> -->
+
+    {{ if (isset(dashboard) ? true : false) }}
+    <script>
+        let socket = null;
 
 
+        const populateUserList = list => {
+            const userList = document.querySelector("#user-list");
+            const onlineUsers = getElement("#online-users");
+
+            log(`Received message from server\n`);
+
+            if (list) {
+                log(`User Count:\t${list.length}\n`)
+                onlineUsers.innerHTML = `<span class="fs-3"><strong>${list.length}</strong></span>`;
+            }
+        };
+
+        const listClients = msg => {
+            log(`Received response from server:\t${stringify(msg)}`);
+
+        };
+
+        const handleBroadcast = (data) => {
+            const message = data.message;
+            const from = data.from;
+            const para = newElement("p");
+            para.innerHTML = `${message}`;
+        }
+
+        const handleComfirmation = data => {
+            log(`Server confirmed my details\n`);
+            const id = data.id;
+
+            const idInput = document.querySelector("#id");
+
+            idInput.value = id;
+        };
+
+        const sendIp = () => {
+            log(`Server acknowledged connection`);
+            const ipAddress = getElement("#ipaddress").innerText;
+            log(`Sending IP address:\t${ipAddress}`);
+            if (ipAddress) {
+                const data = {};
+                data.action = "ipaddress";
+                data.message = ipAddress;
+                socket.send(stringify(data));
+            }
+        };
+
+        document.addEventListener("DOMContentLoaded", function () {
+            socket = new WebSocket("ws://192.168.1.44:8080/ws");
+
+            socket.onopen = () => {
+                log("Successfully connected");
+                const jsonData = {};
+                jsonData.action = "initialconnection";
+
+                socket.send(stringify(jsonData));
+            };
+
+            socket.onclose = () => {
+                log("Connection closed")
+            };
+
+            socket.onerror = () => {
+                log("There was an error")
+            };
+
+            socket.onmessage = msg => {
+                let data = JSON.parse(msg.data);
+                const action = data.action;
+                const users = data.connected_users
+
+                if (action) {
+                    switch (action) {
+                        case "list_users":
+                            populateUserList(users);
+                            break;
+
+                        case "broadcast":
+                            handleBroadcast(data);
+                            break;
+
+                        case "initialconnection":
+                            sendIp();
+                            break;
+
+                        case "clients":
+                            listClients(data)
+                            break;
+
+                        case "confirmed":
+                            handleComfirmation(data);
+                            break;
+                    }
+                }
+
+            };
+
+        });
+
+        window.onbeforeunload = function () {
+            log("Leaving chat room");
+            const jsonData = {};
+
+            jsonData.action = "left";
+
+            socket.send(JSON.stringify(jsonData));
+        };
+
+    </script>
+    {{end}}
 </body>
 
 </html>
