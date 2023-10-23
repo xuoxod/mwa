@@ -307,6 +307,10 @@
             userNameInput.value = username;
             registerGroup.classList.add("d-none");
             sendMessageGroup.classList.remove("d-none");
+
+            const jsonData = {};
+            jsonData.action = "chat-users";
+            socket.send(stringify(jsonData));
         };
 
         const handleComfirmation = data => {
@@ -365,6 +369,10 @@
 
                         case "goodusername":
                             handleGoodUsername(data);
+                            break;
+
+                        case "chat-users":
+                            handleChatUsers(data);
                             break;
                     }
                 }
