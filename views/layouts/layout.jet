@@ -17,6 +17,16 @@
         .notie-container {
             box-shadow: none;
         }
+
+        ::-webkit-scrollbar {
+            -webkit-backface-visibility: hidden;
+        }
+
+        #chat-transcript {
+            max-height: 555px;
+            height: 555px;
+            overflow-y: scroll;
+        }
     </style>
     <title>{{ isset(title) ? title : "" }}</title>
 </head>
@@ -263,9 +273,10 @@
         const registerGroup = document.querySelector("#register-group");
         const usernameInput = document.querySelector("#username-input");
         const sendMessageGroup = document.querySelector("#send-message-group");
-        const sendMButton = document.querySelector("#send-button");
+        const sendButton = document.querySelector("#send-button");
         const messageInput = document.querySelector("#message-input");
         const userNameInput = document.querySelector("#username");
+        const chatTranscript = document.querySelector("#chat-transcript");
 
 
         const populateUserList = data => {
@@ -280,10 +291,26 @@
         };
 
         const handleBroadcast = (data) => {
+            log(`Received a broadcast message\n\tFrom:\t${data.from}\n\tMessage:\t${data.message}\n`);
+
             const message = data.message;
             const from = data.from;
             const para = newElement("p");
-            para.innerHTML = `${message}`;
+            const row = newElement("div");
+
+            para.innerHTML = `<strong>${cap(from)}</strong>: ${message}`;
+
+            addAttribute(row, "class", "row mx-2");
+
+            if (from.trim() == userNameInput.value.trim()) {
+                addAttribute(para, "class", "text-start d-inline-block border rounded bg-info-subtle d-inline-block m-1 p-1");
+            } else {
+                addAttribute(para, "class", "text-end d-inline-block border rounded bg-info-subtle bg-warning-subtle d-inline-block border rounded m-1 p-1");
+            }
+
+            appendChild(chatTranscript, row);
+            appendChild(row, para);
+
         }
 
         const handleAlert = data => {
@@ -310,6 +337,7 @@
 
             const jsonData = {};
             jsonData.action = "chat-users";
+            jsonData.id = idInput.value;
             socket.send(stringify(jsonData));
         };
 
@@ -325,24 +353,39 @@
             socket.send(stringify(jsonData));
         };
 
-        const handleChatUsers = data => {
-            const { users } = data;
-
+        const handleOnlineClients = data => {
+            const { clients } = data
+            log(`Online Clients:\t${stringify(clients)}\n`);
 
             const liParent = getElement("#online-chat-clients");
 
-            for (u in users) {
+            for (c in clients) {
                 const li = newElement("li");
                 const msgIcon = newElement("i");
                 const pUsername = newElement("p");
                 const dGroup = newElement("div");
+                const dGroupText = newElement("span");
 
+                addAttribute(li, "class", "list-group-item");
+                addAttribute(msgIcon, "id", `${clients[c][1]}`);
+                addAttribute(msgIcon, "class", "bi bi-chat-square-text-fill text-left send-message-icon");
+                addAttribute(dGroup, "class", "input-group");
+                addAttribute(dGroupText, "class", "input-group-text");
+                addAttribute(pUsername, "class", "text-right fw-bold m-0 p-0");
 
+                pUsername.innerText = `${clients[c][0]}`
+
+                appendChild(li, dGroup);
+                appendChild(dGroup, dGroupText);
+                appendChild(dGroupText, msgIcon);
+                appendChild(dGroup, pUsername);
+                appendChild(liParent, li);
             }
+
         };
 
         document.addEventListener("DOMContentLoaded", function () {
-            socket = new WebSocket("ws://192.168.1.47:8080/ws");
+            socket = new WebSocket("ws://192.168.1.57:8080/ws");
 
             socket.onopen = () => {
                 log("Successfully connected");
@@ -387,8 +430,12 @@
                             handleGoodUsername(data);
                             break;
 
-                        case "chat-users":
-                            handleChatUsers(data);
+                        case "online-clients":
+                            handleOnlineClients(data);
+                            break;
+
+                        case "broadcast":
+                            handleBroadcast(data);
                             break;
                     }
                 }
@@ -406,6 +453,18 @@
             socket.send(JSON.stringify(jsonData));
         };
 
+        function sendMessage() {
+            if (messageInput.value) {
+                const jsonData = {};
+                jsonData.message = messageInput.value;
+                jsonData.action = "broadcast";
+                jsonData.from = userNameInput.value;
+                socket.send(stringify(jsonData));
+
+                messageInput.value = "";
+            }
+        }
+
         function toggleShowChatWindow() {
             if (chatWindow.classList.contains("d-none")) {
                 chatWindow.classList.remove("d-none");
@@ -417,6 +476,10 @@
                 chatWindowToggle.innerText = "Show Chat";
             }
         }
+
+        sendButton.addEventListener("click", () => {
+            sendMessage();
+        });
 
         chatWindowToggle.addEventListener("click", () => {
             toggleShowChatWindow();

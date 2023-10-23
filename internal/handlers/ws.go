@@ -26,16 +26,16 @@ type WebSocketConnection struct {
 }
 
 type WsJsonResponse struct {
-	Action           string                 `json:"action"`
-	Message          string                 `json:"message"`
-	MessageType      string                 `json:"message_type"`
-	ConnectedClients []string               `json:"connected_clients"`
-	Clients          map[string]interface{} `json:"clients"`
-	From             string                 `json:"from"`
-	To               string                 `json:"to"`
-	ID               string                 `json:"id"`
-	Title            string                 `json:"title"`
-	Level            string                 `json:"level"`
+	Action           string              `json:"action"`
+	Message          string              `json:"message"`
+	MessageType      string              `json:"message_type"`
+	ConnectedClients []string            `json:"connected_clients"`
+	Clients          map[string][]string `json:"clients"`
+	From             string              `json:"from"`
+	To               string              `json:"to"`
+	ID               string              `json:"id"`
+	Title            string              `json:"title"`
+	Level            string              `json:"level"`
 }
 
 type ClientResponse struct {
@@ -55,6 +55,8 @@ type WsPayload struct {
 	Username string              `json:"username"`
 	ID       string              `json:"id"`
 	Conn     WebSocketConnection `json:"-"`
+	From     string              `json:"from"`
+	To       string              `json:"to"`
 }
 
 func (m *Respository) WsEndpoint(w http.ResponseWriter, r *http.Request) {
@@ -139,10 +141,22 @@ func ListenToWsChannel() {
 		case "username":
 			username := e.Message
 			id := e.ID
-
-			fmt.Printf("Client submitted their username and ID\n\t%s\n\t%s", username, id)
-
+			fmt.Printf("Client submitted their username and ID\n\t%s\n\t%s\n", username, id)
 			checkUsernameExists(e.Conn, username, id)
+
+		case "chat-users":
+			getOnlineClients()
+
+		case "broadcast":
+			msg := e.Message
+			from := e.From
+
+			fmt.Printf("\nReceived broadcast from client\n\tFrom:\t %s\n\tMessage:\t%s\n", from, msg)
+
+			response.Action = e.Action
+			response.From = from
+			response.Message = msg
+			broadcastToAll(response)
 		}
 	}
 
@@ -189,6 +203,20 @@ func sendToClient(conn WebSocketConnection, response WsJsonResponse) {
 
 		delete(clients, conn)
 	}
+}
+
+func getOnlineClients() {
+	var response WsJsonResponse
+	onlineClients := make(map[string][]string)
+
+	for client := range clients {
+		dict := clients[client]
+		onlineClients[dict["id"]] = []string{dict["username"], dict["id"]}
+	}
+
+	response.Clients = onlineClients
+	response.Action = "online-clients"
+	broadcastToAll(response)
 }
 
 func getConnectedClients() []string {

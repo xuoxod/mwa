@@ -5,8 +5,8 @@
         <div class="col-md-2 d-md-grid d-sm-none">
             <ul class="list-group nav flex-column">
                 <li id="ipaddress" class="list-group-item nav-item">{{ipaddress}}</li>
-                <li class="list-group-item nav-item">
-                    <a id="chat-window-toggle" href="#" class="nav-link text-black">Show Chat</a>
+                <li class="list-group-item">
+                    <a href="#" id="chat-window-toggle" class="nav-link text-black p-0 d-inline-block">Show Chat</a>
                 </li>
                 <li class="list-group-item nav-item text-black">A third item</li>
                 <li class="list-group-item nav-item text-black">A fourth item</li>
@@ -54,10 +54,13 @@
                 </div>
             </div>
 
-            <div id="chat-window" class="row w-100 mt-3 border border-5 border-success rounded d-none">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-4">
+            <div id="chat-window" class="row w-100 m-3 rounded d-none">
+                <div class="container card">
+                    <div class="row d-flex align-items-start justify-content-center">
+                        <div class="col-md-9" style="position: relative;">
+                            <div id="chat-transcript" class="container border border-primary rounded bg-body-tertiary">
+                            </div>
+
                             <div id="register-group" class="input-group">
                                 <span class="input-group-text">
                                     <i class="bi bi-person-fill fs-3"></i>
@@ -69,6 +72,7 @@
                                     <button id="submit-button" class="btn btn-primary">Submit</button>
                                 </span>
                             </div>
+
                             <div id="send-message-group" class="input-group d-none">
                                 <input id="message-input" type="text" class="form-control"
                                     placeholder="Type message here" autocomplete="off">
@@ -79,13 +83,13 @@
                             </div>
                         </div>
 
-                        <div class="col-md-8">
+                        <div class="col-md-3">
                             <div class="container">
                                 <div class="row">
                                     <div class="col-12">
-                                        <h2 class="text-center">
+                                        <h4 class="text-center">
                                             Who's Online
-                                        </h2>
+                                        </h4>
 
                                         <ul id="online-chat-clients" class="list-group"></ul>
                                     </div>
