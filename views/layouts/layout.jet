@@ -325,6 +325,22 @@
             socket.send(stringify(jsonData));
         };
 
+        const handleChatUsers = data => {
+            const { users } = data;
+
+
+            const liParent = getElement("#online-chat-clients");
+
+            for (u in users) {
+                const li = newElement("li");
+                const msgIcon = newElement("i");
+                const pUsername = newElement("p");
+                const dGroup = newElement("div");
+
+
+            }
+        };
+
         document.addEventListener("DOMContentLoaded", function () {
             socket = new WebSocket("ws://192.168.1.47:8080/ws");
 
