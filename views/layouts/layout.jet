@@ -23,8 +23,9 @@
         }
 
         #chat-transcript {
-            max-height: 555px;
-            height: 555px;
+            position: relative;
+            max-height: 500px;
+            height: 100vh;
             overflow-y: scroll;
         }
     </style>
@@ -279,14 +280,65 @@
         const chatTranscript = document.querySelector("#chat-transcript");
 
 
-        const populateUserList = data => {
+        const populateOnlineUserCount = data => {
             log(`Server refreshed client list\n`);
 
-            const list = data.connected_clients;
-            const userList = document.querySelector("#user-list");
-            const onlineUsers = getElement("#online-users");
-            if (list) {
-                onlineUsers.innerHTML = `<span class="fs-3"><strong>${list.length}</strong></span>`;
+            const clients = data.clients;
+            if (null != clients) {
+                const userList = document.querySelector("#user-list");
+                const onlineUsers = getElement("#online-users");
+                if (clients) {
+                    onlineUsers.innerHTML = `<span class="fs-3"><strong>${Object.keys(clients).length}</strong></span>`;
+
+
+                    if (null != clients) {
+                        log(`\nOnline Clients:\t${stringify(clients)}\n`);
+
+                        const liParent = getElement("#online-chat-clients");
+
+                        removeChildren(liParent);
+
+                        for (c in clients) {
+                            if (clients[c][2] == true || clients[c][2] == "true") {
+                                const li = newElement("li");
+                                const msgIcon = newElement("i");
+                                const trashIcon = newElement("i");
+                                const pUsername = newElement("input");
+                                const dGroup = newElement("div");
+                                const dGroupText = newElement("span");
+                                const eGroupText = newElement("span");
+
+                                addAttribute(li, "class", "list-group-item");
+                                addAttribute(li, "id", `li-${clients[c][0]}`);
+                                addAttribute(msgIcon, "id", `${clients[c][1]}`);
+                                addAttribute(msgIcon, "class", "bi bi-chat-square-text-fill text-left send-message-icon");
+                                addAttribute(trashIcon, "id", `trash-${clients[c][1]}`);
+                                addAttribute(trashIcon, "class", "bi bi-x-circle-fill text-left trash-icon");
+                                addAttribute(dGroup, "class", "input-group");
+                                addAttribute(dGroupText, "class", "input-group-text");
+                                addAttribute(eGroupText, "class", "input-group-text");
+                                addAttribute(pUsername, "class", "form-control text-center fw-bold border-0");
+                                addAttribute(pUsername, "type", "text");
+                                addAttribute(pUsername, "readonly", "true");
+                                addAttribute(pUsername, "value", `${cap(clients[c][0])}`);
+
+                                appendChild(li, dGroup);
+                                appendChild(dGroup, dGroupText);
+                                appendChild(dGroupText, msgIcon);
+                                appendChild(eGroupText, trashIcon);
+                                appendChild(dGroup, pUsername);
+                                appendChild(liParent, li);
+
+                                if (clients[c][0].toLowerCase().trim() == userNameInput.value.toLowerCase().trim()) {
+                                    appendChild(dGroup, eGroupText);
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+
+                onlineUsers.innerHTML = `<span class="fs-3"><strong>${0}</strong></span>`;
             }
         };
 
@@ -331,7 +383,7 @@
 
         const handleGoodUsername = data => {
             const username = data.message;
-            userNameInput.value = username;
+            userNameInput.value = cap(username);
             registerGroup.classList.add("d-none");
             sendMessageGroup.classList.remove("d-none");
 
@@ -353,35 +405,57 @@
             socket.send(stringify(jsonData));
         };
 
+        const handleInitialConnectionConfirmation = () => {
+            log(`Server confirmed my initial connection\n`);
+        };
+
         const handleOnlineClients = data => {
-            const { clients } = data
-            log(`Online Clients:\t${stringify(clients)}\n`);
+            const { clients } = data;
 
-            const liParent = getElement("#online-chat-clients");
+            if (null != clients) {
+                log(`\nOnline Clients:\t${stringify(clients)}\n`);
 
-            for (c in clients) {
-                const li = newElement("li");
-                const msgIcon = newElement("i");
-                const pUsername = newElement("p");
-                const dGroup = newElement("div");
-                const dGroupText = newElement("span");
+                const liParent = getElement("#online-chat-clients");
 
-                addAttribute(li, "class", "list-group-item");
-                addAttribute(msgIcon, "id", `${clients[c][1]}`);
-                addAttribute(msgIcon, "class", "bi bi-chat-square-text-fill text-left send-message-icon");
-                addAttribute(dGroup, "class", "input-group");
-                addAttribute(dGroupText, "class", "input-group-text");
-                addAttribute(pUsername, "class", "text-right fw-bold m-0 p-0");
+                removeChildren(liParent);
 
-                pUsername.innerText = `${clients[c][0]}`
+                for (c in clients) {
+                    if (clients[c][2] == true || clients[c][2] == "true") {
+                        const li = newElement("li");
+                        const msgIcon = newElement("i");
+                        const trashIcon = newElement("i");
+                        const pUsername = newElement("input");
+                        const dGroup = newElement("div");
+                        const dGroupText = newElement("span");
+                        const eGroupText = newElement("span");
 
-                appendChild(li, dGroup);
-                appendChild(dGroup, dGroupText);
-                appendChild(dGroupText, msgIcon);
-                appendChild(dGroup, pUsername);
-                appendChild(liParent, li);
+                        addAttribute(li, "class", "list-group-item");
+                        addAttribute(li, "id", `li-${clients[c][0]}`);
+                        addAttribute(msgIcon, "id", `${clients[c][1]}`);
+                        addAttribute(msgIcon, "class", "bi bi-chat-square-text-fill text-left send-message-icon");
+                        addAttribute(trashIcon, "id", `trash-${clients[c][1]}`);
+                        addAttribute(trashIcon, "class", "bi bi-x-circle-fill text-left trash-icon");
+                        addAttribute(dGroup, "class", "input-group");
+                        addAttribute(dGroupText, "class", "input-group-text");
+                        addAttribute(eGroupText, "class", "input-group-text");
+                        addAttribute(pUsername, "class", "form-control text-center fw-bold border-0");
+                        addAttribute(pUsername, "type", "text");
+                        addAttribute(pUsername, "readonly", "true");
+                        addAttribute(pUsername, "value", `${cap(clients[c][0])}`);
+
+                        appendChild(li, dGroup);
+                        appendChild(dGroup, dGroupText);
+                        appendChild(dGroupText, msgIcon);
+                        appendChild(eGroupText, trashIcon);
+                        appendChild(dGroup, pUsername);
+                        appendChild(liParent, li);
+
+                        if (clients[c][0].toLowerCase().trim() == userNameInput.value.toLowerCase().trim()) {
+                            appendChild(dGroup, eGroupText);
+                        }
+                    }
+                }
             }
-
         };
 
         document.addEventListener("DOMContentLoaded", function () {
@@ -415,7 +489,7 @@
                             break;
 
                         case "clients":
-                            populateUserList(data);
+                            populateOnlineUserCount(data);
                             break;
 
                         case "alert":
@@ -437,6 +511,10 @@
                         case "broadcast":
                             handleBroadcast(data);
                             break;
+
+                        case "initialconnectionconfirmed":
+                            handleInitialConnectionConfirmation();
+                            break;
                     }
                 }
 
@@ -449,6 +527,8 @@
             const jsonData = {};
 
             jsonData.action = "left";
+            jsonData.from = userNameInput.value;
+            jsonData.id = idInput.value;
 
             socket.send(JSON.stringify(jsonData));
         };

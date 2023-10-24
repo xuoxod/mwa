@@ -36,6 +36,7 @@ type WsJsonResponse struct {
 	ID               string              `json:"id"`
 	Title            string              `json:"title"`
 	Level            string              `json:"level"`
+	Online           bool                `json:"true"`
 }
 
 type ClientResponse struct {
@@ -70,18 +71,13 @@ func (m *Respository) WsEndpoint(w http.ResponseWriter, r *http.Request) {
 
 	var response WsJsonResponse
 
-	response.Action = "initialconnection"
+	response.Action = "initialconnectionconfirmed"
 
 	conn := WebSocketConnection{Conn: ws}
 	strMap := make(map[string]string)
 	strMap["id"] = fmt.Sprintf("%v", conn.RemoteAddr())
+	strMap["online"] = fmt.Sprintf("%t", false)
 	clients[conn] = strMap
-
-	for client := range clients {
-		arr := clients[client]
-
-		fmt.Println("Client ID:\t", arr["id"])
-	}
 
 	err = ws.WriteJSON(response)
 
@@ -126,15 +122,16 @@ func ListenToWsChannel() {
 			sendToClient(e.Conn, response)
 
 		case "left":
-			removeClient(e.Conn)
+			delete(clients, e.Conn)
+
 			clients := getConnectedClients()
-			response.ConnectedClients = clients
+			response.Clients = clients
 			response.Action = "clients"
 			broadcastToAll(response)
 
 		case "thankyou":
 			clients := getConnectedClients()
-			response.ConnectedClients = clients
+			response.Clients = clients
 			response.Action = "clients"
 			broadcastToAll(response)
 
@@ -177,21 +174,40 @@ func checkUsernameExists(conn WebSocketConnection, username string, id string) {
 				sendToClient(conn, response)
 				return
 			}
-
 		}
 	}
 
 	dict := clients[conn]
 	dict["username"] = username
+	dict["online"] = fmt.Sprintf("%t", true)
 
 	response.Action = "goodusername"
 	response.Message = username
 	sendToClient(conn, response)
 }
 
-func removeClient(conn WebSocketConnection) {
-	delete(clients, conn)
-}
+/* func removeClient(conn WebSocketConnection, from, userId string) {
+	// var response WsJsonResponse
+	// delete(clients, conn)
+
+	for client := range clients {
+		c := clients[client]
+
+		id := strings.ToLower(strings.TrimSpace(c["id"]))
+		username := strings.ToLower(strings.TrimSpace(c["username"]))
+
+		from := strings.ToLower(strings.TrimSpace(from))
+		userId := strings.ToLower(strings.TrimSpace(userId))
+
+		fmt.Printf("%s === %s and %s === %s\n", from, username, userId, id)
+
+		if id == userId && username == from {
+			fmt.Printf("User %s with ID %s left\n", username, id)
+			delete(clients, conn)
+			return
+		}
+	}
+} */
 
 func sendToClient(conn WebSocketConnection, response WsJsonResponse) {
 	err := conn.WriteJSON(response)
@@ -211,7 +227,7 @@ func getOnlineClients() {
 
 	for client := range clients {
 		dict := clients[client]
-		onlineClients[dict["id"]] = []string{dict["username"], dict["id"]}
+		onlineClients[dict["id"]] = []string{dict["username"], dict["id"], dict["online"]}
 	}
 
 	response.Clients = onlineClients
@@ -219,14 +235,22 @@ func getOnlineClients() {
 	broadcastToAll(response)
 }
 
-func getConnectedClients() []string {
-	members := []string{}
+func getConnectedClients() map[string][]string {
+	onlineClients := make(map[string][]string)
+
+	for client := range clients {
+		dict := clients[client]
+		onlineClients[dict["id"]] = []string{dict["username"], dict["id"], dict["online"]}
+	}
+
+	return onlineClients
+	/* members := []string{}
 
 	for c := range clients {
 		members = append(members, c.RemoteAddr().String())
 	}
 
-	return members
+	return members */
 }
 
 func broadcastToAll(response WsJsonResponse) {
