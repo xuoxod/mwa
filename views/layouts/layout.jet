@@ -278,6 +278,7 @@
         const messageInput = document.querySelector("#message-input");
         const userNameInput = document.querySelector("#username");
         const chatTranscript = document.querySelector("#chat-transcript");
+        const chatWindowToggleLi = document.querySelector("#chat-window-toggle-li");
 
 
         const populateOnlineUserCount = data => {
@@ -550,10 +551,14 @@
                 chatWindow.classList.remove("d-none");
                 chatWindow.classList.add("d-flex");
                 chatWindowToggle.innerText = "Hide Chat";
+                addAttribute(chatWindowToggleLi, "class", "bg-primary fw-bold border rounded list-group-item nav-item");
+                addAttribute(chatWindowToggle, "class", "text-white nav-link p-0 d-inline-block");
             } else {
                 chatWindow.classList.remove("d-flex");
                 chatWindow.classList.add("d-none");
                 chatWindowToggle.innerText = "Show Chat";
+                addAttribute(chatWindowToggleLi, "class", "bg-light-subtle fw-normal border rounded list-group-item nav-item");
+                addAttribute(chatWindowToggle, "class", "text-black nav-link p-0 d-inline-block");
             }
         }
 
