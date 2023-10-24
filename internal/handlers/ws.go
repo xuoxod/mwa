@@ -154,9 +154,29 @@ func ListenToWsChannel() {
 			response.From = from
 			response.Message = msg
 			broadcastToAll(response)
+
+		case "leftroom":
+			id := e.ID
+			userLeft(id)
+			clients := getConnectedClients()
+			response.Clients = clients
+			response.Action = "clients"
+			broadcastToAll(response)
+
 		}
 	}
 
+}
+
+func userLeft(id string) {
+	for c := range clients {
+		client := clients[c]
+
+		if client["id"] == id {
+			client["online"] = fmt.Sprintf("%t", false)
+			return
+		}
+	}
 }
 
 func checkUsernameExists(conn WebSocketConnection, username string, id string) {
@@ -244,13 +264,6 @@ func getConnectedClients() map[string][]string {
 	}
 
 	return onlineClients
-	/* members := []string{}
-
-	for c := range clients {
-		members = append(members, c.RemoteAddr().String())
-	}
-
-	return members */
 }
 
 func broadcastToAll(response WsJsonResponse) {

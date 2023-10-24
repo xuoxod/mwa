@@ -580,6 +580,18 @@
                 usernameInput.value = "";
             }
         });
+
+        document.addEventListener("click", e => {
+            const id = e.target.id;
+            if (id.split("-")[1] == idInput.value) {
+                log(`${userNameInput.value} has left the room\n`);
+                jsonData = {};
+                jsonData.action = "leftroom";
+                jsonData.id = id.split("-")[1].trim();
+                socket.send(stringify(jsonData));
+                userNameInput.value = "";
+            }
+        });
     </script>
     {{end}}
 </body>
