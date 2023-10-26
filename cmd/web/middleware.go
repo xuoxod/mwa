@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/justinas/nosurf"
-	"github.com/xuoxod/mylibs/mwa/internal/helpers"
+	"github.com/xuoxod/mwa/internal/helpers"
 )
 
 func WriteToConsole(next http.Handler) http.Handler {
@@ -18,7 +18,27 @@ func WriteToConsole(next http.Handler) http.Handler {
 		protocolMajor := r.ProtoMajor
 		protocolMinor := r.ProtoMinor
 
+		fmt.Printf("Offending Middleware:\tw's type is %T\n", w)
+
+		if path == "/ws" {
+			w.Header().Set("Content", "text/plain")
+		}
+
 		fmt.Printf("\nPage Hit\n\tHost: %v\n\taddress: %v\n\tPath: %v\n\tMethod: %v\n\tProtocol: %v\n\t\tMajor: %v\n\t\tMinor: %v\n", host, remoteAddr, path, method, protocol, protocolMajor, protocolMinor)
+		next.ServeHTTP(w, r)
+	})
+}
+
+// RecoverPanic recovers from a panic
+func RecoverPanic(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		defer func() {
+			// Check if there has been a panic
+			if err := recover(); err != nil {
+				// return a 500 Internal Server response
+				helpers.ServerError(w, fmt.Errorf("%s", err))
+			}
+		}()
 		next.ServeHTTP(w, r)
 	})
 }

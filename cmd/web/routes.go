@@ -5,15 +5,17 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
-	"github.com/xuoxod/mylibs/mwa/internal/handlers"
+	"github.com/xuoxod/mwa/internal/handlers"
 )
 
 func routes() http.Handler {
 	mux := chi.NewRouter()
-	mux.Use(middleware.Recoverer)
-	mux.Use(WriteToConsole)
-	mux.Use(NoSurf)
 	mux.Use(SessionLoad)
+	mux.Use(WriteToConsole)
+	mux.Use(middleware.Recoverer)
+	mux.Use(RecoverPanic)
+	mux.Use(middleware.NoCache)
+	mux.Use(NoSurf)
 
 	fileserver := http.FileServer(http.Dir("./static/"))
 	mux.Handle("/static/", http.StripPrefix("/static", fileserver))

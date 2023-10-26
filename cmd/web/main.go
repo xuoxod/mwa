@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/alexedwards/scs/v2"
-	"github.com/xuoxod/mylibs/mwa/internal/config"
-	"github.com/xuoxod/mylibs/mwa/internal/handlers"
+	"github.com/xuoxod/mwa/internal/config"
+	"github.com/xuoxod/mwa/internal/handlers"
 )
 
 // Application configuration
