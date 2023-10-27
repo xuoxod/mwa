@@ -60,57 +60,7 @@ type WsPayload struct {
 	To       string              `json:"to"`
 }
 
-func (m *Respository) WWsEndpoint(w http.ResponseWriter, r *http.Request) {
-	ws, err := upgradeConnection.Upgrade(w, r, nil)
-
-	println("Client connected to endpoint")
-
-	if err != nil {
-		log.Printf("Endpoint Error:\t%s", err.Error())
-	}
-
-	var response WsJsonResponse
-
-	response.Action = "initialconnectionconfirmed"
-
-	conn := WebSocketConnection{Conn: ws}
-	strMap := make(map[string]string)
-	strMap["id"] = fmt.Sprintf("%v", conn.RemoteAddr())
-	strMap["online"] = fmt.Sprintf("%t", false)
-	clients[conn] = strMap
-
-	err = ws.WriteJSON(response)
-
-	if err != nil {
-		log.Println("Could not send initial response to client:\t", err.Error())
-	}
-
-	go ListenForWs(&conn)
-}
-
 func (m *Respository) WsEndpoint(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("Content-Length", "text/plain; charset=utf-8")
-	w.WriteHeader(200)
-	hj, ok := w.(http.Hijacker)
-
-	fmt.Println(ok)
-
-	c, _, err := hj.Hijack()
-
-	if err != nil {
-		panic(err)
-	}
-
-	n, err := c.Write([]byte("hello"))
-
-	fmt.Println("n == ", n)
-
-	if err != nil {
-		panic(err)
-	}
-
-	defer c.Close()
-
 	ws, err := upgradeConnection.Upgrade(w, r, nil)
 
 	println("Client connected to endpoint")
