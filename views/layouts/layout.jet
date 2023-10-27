@@ -590,8 +590,6 @@
                 jsonData.id = id.split("-")[1].trim();
                 socket.send(stringify(jsonData));
                 userNameInput.value = "";
-                registerGroup.classList.remove("d-none");
-                sendMessageGroup.classList.add("d-none");
             }
         });
     </script>
