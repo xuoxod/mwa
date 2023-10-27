@@ -11,9 +11,10 @@ import (
 func routes() http.Handler {
 	mux := chi.NewRouter()
 	mux.Use(SessionLoad)
-	mux.Use(WriteToConsole)
+	mux.Use(middleware.Compress(5))
 	mux.Use(middleware.Recoverer)
 	mux.Use(RecoverPanic)
+	mux.Use(WriteToConsole)
 	mux.Use(middleware.NoCache)
 	mux.Use(NoSurf)
 

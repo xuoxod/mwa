@@ -61,6 +61,20 @@ type WsPayload struct {
 }
 
 func (m *Respository) WsEndpoint(w http.ResponseWriter, r *http.Request) {
+	hj, ok := w.(http.Hijacker)
+
+	if !ok {
+		http.Error(w, "webserver doesn't support hijacking", http.StatusInternalServerError)
+		return
+	}
+
+	connection, bufrw, exception := hj.Hijack()
+
+	if exception != nil {
+		http.Error(w, exception.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	ws, err := upgradeConnection.Upgrade(w, r, nil)
 
 	println("Client connected to endpoint")
@@ -79,11 +93,17 @@ func (m *Respository) WsEndpoint(w http.ResponseWriter, r *http.Request) {
 	strMap["online"] = fmt.Sprintf("%t", false)
 	clients[conn] = strMap
 
+	// rRes := []byte(fmt.Sprintf("%v", response))
+
+	// bufrw.WriteByte(rRes)
 	err = ws.WriteJSON(response)
 
 	if err != nil {
 		log.Println("Could not send initial response to client:\t", err.Error())
 	}
+
+	defer connection.Close()
+	bufrw.Flush()
 
 	go ListenForWs(&conn)
 }

@@ -18,7 +18,7 @@ func WriteToConsole(next http.Handler) http.Handler {
 		protocolMajor := r.ProtoMajor
 		protocolMinor := r.ProtoMinor
 
-		fmt.Printf("Offending Middleware:\tw's type is %T\n", w)
+		fmt.Printf("Middleware:\tw's type is %T\n", w)
 
 		if path == "/ws" {
 			w.Header().Set("Content", "text/plain")

@@ -460,7 +460,7 @@
         };
 
         document.addEventListener("DOMContentLoaded", function () {
-            socket = new WebSocket("ws://localhost:8080/ws");
+            socket = new WebSocket("ws://192.168.1.57:8080/ws");
 
             socket.onopen = () => {
                 log("Successfully connected");
