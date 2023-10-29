@@ -7,7 +7,7 @@ import (
 	"github.com/CloudyKit/jet/v6"
 )
 
-func (m *Respository) Dashboard(w http.ResponseWriter, r *http.Request) {
+func (m *Respository) UserDashboard(w http.ResponseWriter, r *http.Request) {
 	vars := make(jet.VarMap)
 	vars.Set("title", "Dashboard")
 	vars.Set("dashboard", true)

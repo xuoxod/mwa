@@ -31,12 +31,15 @@ func routes() http.Handler {
 
 	mux.Route("/user", func(mux chi.Router) {
 		mux.Use(SessionLoad)
-		mux.Get("/", handlers.Repo.Dashboard)
+		mux.Get("/", handlers.Repo.UserDashboard)
+	})
+
+	mux.Route("/ws", func(mux chi.Router) {
+		mux.Get("/", handlers.Repo.WsEndpoint)
 	})
 
 	mux.Route("/public", func(mux chi.Router) {
-		// mux.Use(HijackThis)
-		mux.Get("/", handlers.Repo.WsEndpoint)
+		mux.Get("/", handlers.Repo.Dashboard)
 	})
 
 	return mux

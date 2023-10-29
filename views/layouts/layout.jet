@@ -263,7 +263,7 @@
 
     </script>
 
-    {{ if (isset(dashboard) ? true : false) }}
+    {{ if (isset(public) ? true : false) }}
     <script>
         let socket = null;
         const idInput = document.querySelector("#id");
