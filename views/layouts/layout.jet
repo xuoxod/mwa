@@ -519,9 +519,7 @@
 
                     }
                 }
-
             };
-
         });
 
         window.onbeforeunload = function () {
