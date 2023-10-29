@@ -608,7 +608,6 @@
             jsonData.action = "showonlinestatus";
             jsonData.showonlinestatus = checked;
             socket.send(stringify(jsonData));
-            log(`Element with ID ${id} was clicked\nChecked? ${checked}\n`);
 
             onlineStatusLabel.innerText = checked ? "Online" : "Offline";
         });
