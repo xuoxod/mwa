@@ -63,7 +63,7 @@
 
                 <div class="col-md-9" style="position: relative;">
                     <div id="chat-transcript"
-                        class="container-fluid border rounded bg-body-tertiary p-2">
+                        class="container-fluid border rounded bg-body-tertiary p-2 mb-2">
                     </div>
 
                     <div id="register-group" class="input-group mt-2">
