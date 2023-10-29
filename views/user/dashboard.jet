@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-md-2 d-md-grid d-sm-none">
             <ul class="list-group nav flex-column">
-                <li id="ipaddress" class="list-group-item nav-item">{{ipaddress}}</li>
+                <li id="ipaddress" class="list-group-item nav-item"></li>
                 <li id="chat-window-toggle-li" class="list-group-item">
                     <a href="#" id="chat-window-toggle" class="nav-link text-black p-0 d-inline-block">Show Chat</a>
                 </li>

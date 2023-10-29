@@ -67,6 +67,7 @@ func (m *Respository) WsEndpoint(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Printf("Endpoint Error:\t%s", err.Error())
+		return
 	}
 
 	var response WsJsonResponse

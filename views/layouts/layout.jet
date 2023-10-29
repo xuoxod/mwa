@@ -475,7 +475,9 @@
             };
 
             socket.onerror = () => {
-                log("There was an error")
+                log("There was an error");
+                log(socket)
+
             };
 
             socket.onmessage = msg => {

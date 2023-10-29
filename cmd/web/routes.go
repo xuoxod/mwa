@@ -10,13 +10,13 @@ import (
 
 func routes() http.Handler {
 	mux := chi.NewRouter()
-	mux.Use(SessionLoad)
-	mux.Use(middleware.Compress(5))
+	// mux.Use(middleware.Compress(5))
 	mux.Use(middleware.Recoverer)
-	mux.Use(RecoverPanic)
+	// mux.Use(RecoverPanic)
 	mux.Use(WriteToConsole)
 	mux.Use(middleware.NoCache)
 	mux.Use(NoSurf)
+	// mux.Use(session.LoadAndSave)
 
 	fileserver := http.FileServer(http.Dir("./static/"))
 	mux.Handle("/static/", http.StripPrefix("/static", fileserver))
@@ -34,6 +34,7 @@ func routes() http.Handler {
 	})
 
 	mux.Route("/ws", func(mux chi.Router) {
+		// mux.Use(HijackThis)
 		mux.Get("/", handlers.Repo.WsEndpoint)
 	})
 

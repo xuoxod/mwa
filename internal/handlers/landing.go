@@ -40,8 +40,8 @@ func NewHandler(r *Respository) {
 }
 
 func (m *Respository) Home(w http.ResponseWriter, r *http.Request) {
-	remoteIP := r.RemoteAddr
-	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
+	// remoteIP := r.RemoteAddr
+	// m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
 
 	vars := make(jet.VarMap)
 	vars.Set("title", "Home")
@@ -63,13 +63,13 @@ func (m *Respository) Home(w http.ResponseWriter, r *http.Request) {
 }
 
 func (m *Respository) About(w http.ResponseWriter, r *http.Request) {
-	remoteIp := m.App.Session.GetString(r.Context(), "remote_ip")
+	// remoteIp := m.App.Session.GetString(r.Context(), "remote_ip")
 	vars := make(jet.VarMap)
 	vars.Set("title", "About")
 	vars.Set("appname", `Awesome Web App`)
 	vars.Set("appver", `1.0`)
 	vars.Set("appdate", utils.DateTimeStamp())
-	vars.Set("remoteip", remoteIp)
+	// vars.Set("remoteip", remoteIp)
 
 	err := RenderPage(w, "landing/about.jet", vars)
 
