@@ -34,7 +34,7 @@ func routes() http.Handler {
 		mux.Get("/", handlers.Repo.Dashboard)
 	})
 
-	mux.Route("/ws", func(mux chi.Router) {
+	mux.Route("/public", func(mux chi.Router) {
 		// mux.Use(HijackThis)
 		mux.Get("/", handlers.Repo.WsEndpoint)
 	})
