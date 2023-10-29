@@ -279,6 +279,8 @@
         const userNameInput = document.querySelector("#username");
         const chatTranscript = document.querySelector("#chat-transcript");
         const chatWindowToggleLi = document.querySelector("#chat-window-toggle-li");
+        const onlineStatusCheckbox = document.querySelector("#online-status-checkbox");
+        const onlineStatusLabel = document.querySelector("#online-status-label");
 
 
         const populateOnlineUserCount = data => {
@@ -286,10 +288,8 @@
 
             const clients = data.clients;
             if (null != clients) {
-                const onlineUsers = getElement("#online-users");
                 if (clients) {
-                    onlineUsers.innerHTML = `<span class="fs-3"><strong>${Object.keys(clients).length}</strong></span>`;
-
+                    checkOnlineStatus(clients);
 
                     if (null != clients) {
                         log(`\nOnline Clients:\t${stringify(clients)}\n`);
@@ -516,6 +516,7 @@
                         case "initialconnectionconfirmed":
                             handleInitialConnectionConfirmation();
                             break;
+
                     }
                 }
 
@@ -562,6 +563,24 @@
             }
         }
 
+        function checkOnlineStatus(clients) {
+            const onlineUsers = getElement("#online-users");
+            const onlineClients = [];
+
+            for (const c in clients) {
+                const onlineStatus = clients[c][3];
+                const id = clients[c][1];
+
+                if (onlineStatus == true || onlineStatus == "true") {
+                    onlineClients.push(id);
+
+                }
+            }
+
+
+            onlineUsers.innerHTML = `<span class="fs-3"><strong>${onlineClients.length}</strong></span>`;
+        }
+
         sendButton.addEventListener("click", () => {
             sendMessage();
         });
@@ -579,6 +598,19 @@
                 socket.send(stringify(jsonData));
                 usernameInput.value = "";
             }
+        });
+
+        onlineStatusCheckbox.addEventListener("click", e => {
+            const id = e.target.id;
+            const checked = e.target.checked;
+            const jsonData = {};
+            jsonData.id = idInput.value;
+            jsonData.action = "showonlinestatus";
+            jsonData.showonlinestatus = checked;
+            socket.send(stringify(jsonData));
+            log(`Element with ID ${id} was clicked\nChecked? ${checked}\n`);
+
+            onlineStatusLabel.innerText = checked ? "Online" : "Offline";
         });
 
         document.addEventListener("click", e => {

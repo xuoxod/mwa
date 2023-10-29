@@ -21,6 +21,13 @@ var upgradeConnection = websocket.Upgrader{
 	},
 }
 
+type Client struct {
+	ID               string
+	Username         string
+	ShowOnlineStatus string
+	Online           string
+}
+
 type WebSocketConnection struct {
 	*websocket.Conn
 }
@@ -36,7 +43,8 @@ type WsJsonResponse struct {
 	ID               string              `json:"id"`
 	Title            string              `json:"title"`
 	Level            string              `json:"level"`
-	Online           bool                `json:"true"`
+	Online           bool                `json:"online"`
+	ShowOnlineStatus bool                `json:"show_online_status"`
 }
 
 type ClientResponse struct {
@@ -51,13 +59,15 @@ type ClientResponse struct {
 }
 
 type WsPayload struct {
-	Action   string              `json:"action"`
-	Message  string              `json:"message"`
-	Username string              `json:"username"`
-	ID       string              `json:"id"`
-	Conn     WebSocketConnection `json:"-"`
-	From     string              `json:"from"`
-	To       string              `json:"to"`
+	Action           string              `json:"action"`
+	Message          string              `json:"message"`
+	Username         string              `json:"username"`
+	ID               string              `json:"id"`
+	Conn             WebSocketConnection `json:"-"`
+	From             string              `json:"from"`
+	To               string              `json:"to"`
+	ShowOnlineStatus bool                `json:"showonlinestatus"`
+	Online           bool                `json:"online"`
 }
 
 func (m *Respository) WsEndpoint(w http.ResponseWriter, r *http.Request) {
@@ -78,6 +88,8 @@ func (m *Respository) WsEndpoint(w http.ResponseWriter, r *http.Request) {
 	strMap := make(map[string]string)
 	strMap["id"] = fmt.Sprintf("%v", conn.RemoteAddr())
 	strMap["online"] = fmt.Sprintf("%t", false)
+	strMap["username"] = ""
+	strMap["showonlinestatus"] = fmt.Sprintf("%t", true)
 	clients[conn] = strMap
 
 	err = ws.WriteJSON(response)
@@ -164,9 +176,59 @@ func ListenToWsChannel() {
 			response.Action = "clients"
 			broadcastToAll(response)
 
+		case "showonlinestatus":
+			id := e.ID
+			showOnlineStatus := e.ShowOnlineStatus
+
+			fmt.Printf("Client %s changed show online status to %t\n", id, showOnlineStatus)
+
+			UpdateClientOnlineStatus(id, showOnlineStatus)
+
+			clients := getConnectedClients()
+			response.Clients = clients
+			response.Action = "clients"
+			broadcastToAll(response)
 		}
 	}
 
+}
+
+func UpdateClientOnlineStatus(id string, showOnlineStatus bool) {
+	fmt.Printf("\n\tUpdateClientOnlineStatus method invoked with ID: %s\n", id)
+
+	for c := range clients {
+		dict := clients[c]
+
+		if dict["id"] == id {
+			dict["showonlinestatus"] = fmt.Sprintf("%t", showOnlineStatus)
+			break
+		}
+	}
+}
+
+func GetClient(id string) Client {
+	var client Client
+	fmt.Printf("\n\tgetClient method invoked with ID: %s\n", id)
+
+	for c := range clients {
+		dict := clients[c]
+
+		if dict["id"] == id {
+			userId := dict["id"]
+			username := dict["username"]
+			online := dict["online"]
+			showOnlineStatus := dict["showonlinestatus"]
+
+			client.ID = userId
+			client.Username = username
+			client.Online = online
+			client.ShowOnlineStatus = showOnlineStatus
+
+			break
+		}
+	}
+
+	return client
 }
 
 func userLeft(id string) {
@@ -248,7 +310,7 @@ func getOnlineClients() {
 
 	for client := range clients {
 		dict := clients[client]
-		onlineClients[dict["id"]] = []string{dict["username"], dict["id"], dict["online"]}
+		onlineClients[dict["id"]] = []string{dict["username"], dict["id"], dict["online"], dict["showonlinestatus"]}
 	}
 
 	response.Clients = onlineClients
@@ -261,7 +323,7 @@ func getConnectedClients() map[string][]string {
 
 	for client := range clients {
 		dict := clients[client]
-		onlineClients[dict["id"]] = []string{dict["username"], dict["id"], dict["online"]}
+		onlineClients[dict["id"]] = []string{dict["username"], dict["id"], dict["online"], dict["showonlinestatus"]}
 	}
 
 	return onlineClients
