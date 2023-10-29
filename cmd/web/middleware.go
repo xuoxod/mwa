@@ -114,42 +114,42 @@ func NoSurf(next http.Handler) http.Handler {
 	return csrfHandler
 }
 
-// func SessionLoad(next http.Handler) http.Handler {
-// 	return session.LoadAndSave(next)
-// }
+func SessionLoad(next http.Handler) http.Handler {
+	return session.LoadAndSave(next)
+}
 
-// func Auth(next http.Handler) http.Handler {
-// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-// 		if !helpers.IsAuthenticated(r) {
-// 			session.Put(r.Context(), "error", "Sign in first")
-// 			http.Redirect(w, r, "/", http.StatusSeeOther)
-// 			return
-// 		}
+func Auth(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if !helpers.IsAuthenticated(r) {
+			session.Put(r.Context(), "error", "Sign in first")
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			return
+		}
 
-// 		next.ServeHTTP(w, r)
-// 	})
-// }
+		next.ServeHTTP(w, r)
+	})
+}
 
-// func Unauth(next http.Handler) http.Handler {
-// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-// 		if helpers.IsAuthenticated(r) {
-// 			session.Put(r.Context(), "warning", "Resource not found")
-// 			http.Redirect(w, r, "/user/dashboard", http.StatusSeeOther)
-// 			return
-// 		}
+func Unauth(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if helpers.IsAuthenticated(r) {
+			session.Put(r.Context(), "warning", "Resource not found")
+			http.Redirect(w, r, "/user/dashboard", http.StatusSeeOther)
+			return
+		}
 
-// 		next.ServeHTTP(w, r)
-// 	})
-// }
+		next.ServeHTTP(w, r)
+	})
+}
 
-// func Admin(next http.Handler) http.Handler {
-// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-// 		if !helpers.IsAdmin(r) {
-// 			session.Put(r.Context(), "warning", "Access Restricted")
-// 			http.Redirect(w, r, "/user/dashboard", http.StatusSeeOther)
-// 			return
-// 		}
+func Admin(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if !helpers.IsAdmin(r) {
+			session.Put(r.Context(), "warning", "Access Restricted")
+			http.Redirect(w, r, "/user/dashboard", http.StatusSeeOther)
+			return
+		}
 
-// 		next.ServeHTTP(w, r)
-// 	})
-// }
+		next.ServeHTTP(w, r)
+	})
+}

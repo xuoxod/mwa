@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/websocket"
 )
@@ -25,6 +26,7 @@ type Client struct {
 	ID               string
 	Username         string
 	ShowOnlineStatus string
+	ShowUsername     bool
 	Online           string
 }
 
@@ -45,6 +47,7 @@ type WsJsonResponse struct {
 	Level            string              `json:"level"`
 	Online           bool                `json:"online"`
 	ShowOnlineStatus bool                `json:"show_online_status"`
+	ShowUsername     bool                `json:"show_username"`
 }
 
 type ClientResponse struct {
@@ -67,6 +70,7 @@ type WsPayload struct {
 	From             string              `json:"from"`
 	To               string              `json:"to"`
 	ShowOnlineStatus bool                `json:"showonlinestatus"`
+	ShowUsername     bool                `json:"show_username"`
 	Online           bool                `json:"online"`
 }
 
@@ -90,6 +94,7 @@ func (m *Respository) WsEndpoint(w http.ResponseWriter, r *http.Request) {
 	strMap["online"] = fmt.Sprintf("%t", false)
 	strMap["username"] = ""
 	strMap["showonlinestatus"] = fmt.Sprintf("%t", true)
+	strMap["showusername"] = fmt.Sprintf("%t", true)
 	clients[conn] = strMap
 
 	err = ws.WriteJSON(response)
@@ -160,12 +165,16 @@ func ListenToWsChannel() {
 		case "broadcast":
 			msg := e.Message
 			from := e.From
+			id := e.ID
+			var client Client
+			client = GetClient(id)
 
-			fmt.Printf("\nReceived broadcast from client\n\tFrom:\t %s\n\tMessage:\t%s\n", from, msg)
+			fmt.Printf("\nReceived broadcast from client\n\tFrom: %s with ID %s\n\tMessage:%s\n", from, msg, id)
 
 			response.Action = e.Action
 			response.From = from
 			response.Message = msg
+			response.ShowUsername = client.ShowUsername
 			broadcastToAll(response)
 
 		case "leftroom":
@@ -218,12 +227,14 @@ func GetClient(id string) Client {
 			username := dict["username"]
 			online := dict["online"]
 			showOnlineStatus := dict["showonlinestatus"]
+			showUsername := dict["showusername"]
+			show, _ := strconv.ParseBool(showUsername)
 
 			client.ID = userId
 			client.Username = username
 			client.Online = online
 			client.ShowOnlineStatus = showOnlineStatus
-
+			client.ShowUsername = show
 			break
 		}
 	}
@@ -310,7 +321,7 @@ func getOnlineClients() {
 
 	for client := range clients {
 		dict := clients[client]
-		onlineClients[dict["id"]] = []string{dict["username"], dict["id"], dict["online"], dict["showonlinestatus"]}
+		onlineClients[dict["id"]] = []string{dict["username"], dict["id"], dict["online"], dict["showonlinestatus"], dict["showusername"]}
 	}
 
 	response.Clients = onlineClients
@@ -323,7 +334,7 @@ func getConnectedClients() map[string][]string {
 
 	for client := range clients {
 		dict := clients[client]
-		onlineClients[dict["id"]] = []string{dict["username"], dict["id"], dict["online"], dict["showonlinestatus"]}
+		onlineClients[dict["id"]] = []string{dict["username"], dict["id"], dict["online"], dict["showonlinestatus"], dict["showusername"]}
 	}
 
 	return onlineClients
