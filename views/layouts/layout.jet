@@ -286,7 +286,6 @@
 
             const clients = data.clients;
             if (null != clients) {
-                const userList = document.querySelector("#user-list");
                 const onlineUsers = getElement("#online-users");
                 if (clients) {
                     onlineUsers.innerHTML = `<span class="fs-3"><strong>${Object.keys(clients).length}</strong></span>`;
@@ -397,7 +396,6 @@
         const handleComfirmation = data => {
             log(`Server confirmed my connection\n`);
             const id = data.id;
-            const clients = data.connected_clients;
 
             idInput.value = id;
             idComp.innerText = `${id}`;
@@ -407,7 +405,7 @@
         };
 
         const handleInitialConnectionConfirmation = () => {
-            log(`Server confirmed my initial connection\n`);
+            log(`Server acknowledged my initial connection\n`);
         };
 
         const handleOnlineClients = data => {
@@ -592,6 +590,8 @@
                 jsonData.id = id.split("-")[1].trim();
                 socket.send(stringify(jsonData));
                 userNameInput.value = "";
+                registerGroup.classList.remove("d-none");
+                sendMessageGroup.classList.add("d-none");
             }
         });
     </script>
