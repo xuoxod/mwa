@@ -40,9 +40,6 @@ func NewHandler(r *Respository) {
 }
 
 func (m *Respository) Home(w http.ResponseWriter, r *http.Request) {
-	remoteIP := r.RemoteAddr
-	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
-
 	vars := make(jet.VarMap)
 	vars.Set("title", "Home")
 	vars.Set("headingOne", `Welcome to Awesome Web App`)
