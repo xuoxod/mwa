@@ -8,9 +8,12 @@ import (
 	"github.com/CloudyKit/jet/v6"
 	"github.com/justinas/nosurf"
 	"github.com/xuoxod/mwa/internal/config"
+	"github.com/xuoxod/mwa/internal/driver"
 	"github.com/xuoxod/mwa/internal/forms"
 	"github.com/xuoxod/mwa/internal/helpers"
 	"github.com/xuoxod/mwa/internal/models"
+	"github.com/xuoxod/mwa/internal/repository"
+	"github.com/xuoxod/mwa/internal/repository/dbrepo"
 	"github.com/xuoxod/mwa/pkg/utils"
 )
 
@@ -25,12 +28,14 @@ var Repo *Respository
 // Repository the Repository type
 type Respository struct {
 	App *config.AppConfig
+	DB  repository.DatabaseRepo
 }
 
 // NewRepo creates a new Repository
-func NewRepo(a *config.AppConfig) *Respository {
+func NewRepo(a *config.AppConfig, db *driver.DB) *Respository {
 	return &Respository{
 		App: a,
+		DB:  dbrepo.NewPostgresRepo(db.SQL, a),
 	}
 }
 
@@ -182,11 +187,33 @@ func (m *Respository) PostSignin(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Println(err.Error())
 		}
-	} else {
-		// Put user in session
-
-		http.Redirect(w, r, "/public", http.StatusSeeOther)
+		return
 	}
+
+	// Authenticate user
+
+	u, p, s, err := m.DB.Authenticate(signinform.Email, signinform.Password)
+
+	if err != nil {
+		fmt.Println("Authentication Error:\t", err.Error())
+		return
+	}
+
+	var user models.User
+	var profile models.Profile
+	var settings models.UserSettings
+
+	user = u
+	profile = p
+	settings = s
+
+	// Put user in session
+	m.App.Session.Put(r.Context(), "user_id", user)
+	m.App.Session.Put(r.Context(), "profile", profile)
+	m.App.Session.Put(r.Context(), "settings", settings)
+	m.App.Session.Put(r.Context(), "admin_id", user.AccessLevel)
+	http.Redirect(w, r, "/user", http.StatusSeeOther)
+
 }
 
 func RenderPage(w http.ResponseWriter, tmpl string, data jet.VarMap) error {

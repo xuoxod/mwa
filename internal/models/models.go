@@ -25,17 +25,20 @@ type Users struct {
 
 // User
 type User struct {
-	ID        string
-	FirstName string
-	LastName  string
-	Email     string
-	Phone     string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID          string
+	FirstName   string
+	LastName    string
+	Email       string
+	Phone       string
+	Password    string
+	AccessLevel int
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
 // User profile
 type Profile struct {
+	ID          int
 	UserID      int
 	UserName    string
 	DisplayName string
@@ -43,22 +46,16 @@ type Profile struct {
 	Address     string
 	City        string
 	State       string
+	Zipcode     string
 	UpdatedAt   time.Time
 	CreatedAt   time.Time
 }
 
 // User settings
 type UserSettings struct {
+	ID                int
 	UserID            int
-	Online            bool
-	ShowProfile       bool
-	ShowUsername      bool
 	ShowOnlineStatus  bool
-	ShowAddress       bool
-	ShowCity          bool
-	ShowState         bool
-	ShowDisplayName   bool
-	ShowContactInfo   bool
 	ShowPhone         bool
 	ShowEmail         bool
 	ShowNotifications bool

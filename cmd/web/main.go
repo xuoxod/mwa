@@ -13,6 +13,7 @@ import (
 	"github.com/xuoxod/mwa/internal/driver"
 	"github.com/xuoxod/mwa/internal/envloader"
 	"github.com/xuoxod/mwa/internal/handlers"
+	"github.com/xuoxod/mwa/internal/helpers"
 	"github.com/xuoxod/mwa/internal/models"
 )
 
@@ -25,6 +26,14 @@ var infoLog *log.Logger
 var errorLog *log.Logger
 
 func main() {
+	app.DBConnection = os.Getenv("DB_URL")
+
+	err := envloader.LoadEnvVars()
+
+	if err != nil {
+		log.Fatal("error loading .env file")
+	}
+
 	db, err := run()
 
 	if err != nil {
@@ -47,12 +56,6 @@ func main() {
 }
 
 func run() (*driver.DB, error) {
-	err := envloader.LoadEnvVars()
-	app.DBConnection = os.Getenv("DB_URL")
-
-	if err != nil {
-		log.Fatal("error loading .env file")
-	}
 
 	// Store a value in session
 	gob.Register(models.Profile{})
@@ -81,9 +84,6 @@ func run() (*driver.DB, error) {
 	// Config app level config with session
 	app.Session = session
 
-	repo := handlers.NewRepo(&app)
-	handlers.NewHandler(repo)
-
 	// Set the app level session
 	app.Session = session
 
@@ -103,6 +103,12 @@ func run() (*driver.DB, error) {
 		log.Println("Cannot connect to database! Dying ...")
 		return nil, err
 	}
+
+	fmt.Println("Connected to datastore")
+
+	repo := handlers.NewRepo(&app, db)
+	handlers.NewHandler(repo)
+	helpers.NewHelpers(&app)
 
 	return db, nil
 }
