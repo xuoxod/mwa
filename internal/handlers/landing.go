@@ -243,7 +243,10 @@ func (m *Respository) PostSignin(w http.ResponseWriter, r *http.Request) {
 	m.App.Session.Put(r.Context(), "user_id", user)
 	m.App.Session.Put(r.Context(), "profile", profile)
 	m.App.Session.Put(r.Context(), "settings", settings)
-	m.App.Session.Put(r.Context(), "access_level", user.AccessLevel)
+
+	if user.AccessLevel == 1 {
+		m.App.Session.Put(r.Context(), "access_level", user.AccessLevel)
+	}
 	http.Redirect(w, r, "/user", http.StatusSeeOther)
 
 }
