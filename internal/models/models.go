@@ -20,7 +20,7 @@ type Signin struct {
 
 // All users
 type Users struct {
-	Collection map[string]interface{}
+	Collection map[string][]User
 }
 
 // User
@@ -50,7 +50,9 @@ type Profile struct {
 // User settings
 type UserSettings struct {
 	UserID            int
+	Online            bool
 	ShowProfile       bool
+	ShowUsername      bool
 	ShowOnlineStatus  bool
 	ShowAddress       bool
 	ShowCity          bool

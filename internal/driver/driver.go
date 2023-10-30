@@ -2,8 +2,12 @@ package driver
 
 import (
 	"database/sql"
-	"log"
 	"time"
+
+	_ "github.com/jackc/pgconn"
+	_ "github.com/jackc/pgx/v5"
+	_ "github.com/jackc/pgx/v5/stdlib"
+	_ "github.com/lib/pq"
 )
 
 // DB holds the database connection pool
@@ -31,13 +35,13 @@ func ConnectSql(dsn string) (*DB, error) {
 
 	dbConn.SQL = d
 
-	err = testDb(dbConn.SQL)
+	/* err = testDb(dbConn.SQL)
 
 	if err != nil {
 		log.Println("Database test error:\t", err.Error())
 		return nil, err
 	}
-
+	*/
 	return dbConn, nil
 }
 
