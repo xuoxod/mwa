@@ -263,6 +263,12 @@
 
     </script>
 
+    {{ if error }}
+    <script>
+        notify("{{.type}}", "{{.msg}}");
+    </script>
+    {{end}}
+
     {{ if (isset(public) ? true : false) }}
     <script>
         let socket = null;

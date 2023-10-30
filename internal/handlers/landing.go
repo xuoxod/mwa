@@ -196,6 +196,23 @@ func (m *Respository) PostSignin(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		fmt.Println("Authentication Error:\t", err.Error())
+		vars := make(jet.VarMap)
+		vars.Set("error", "Authentication Error")
+		vars.Set("headingOne", `Welcome to Awesome Web App`)
+		vars.Set("statement", `We don't Fuck around ... Either sign in to start using the site or register first then sign in.`)
+
+		data := make(map[string]interface{})
+		data["type"] = "error"
+		data["msg"] = "Account Not Found"
+		data["signinform"] = signinform
+		data["form"] = form
+		data["csrftoken"] = nosurf.Token(r)
+
+		err := RenderPageWithContext(w, "landing/home.jet", vars, data)
+
+		if err != nil {
+			log.Println(err.Error())
+		}
 		return
 	}
 
