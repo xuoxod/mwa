@@ -4,7 +4,7 @@ import "github.com/xuoxod/mwa/internal/models"
 
 type DatabaseRepo interface {
 	AllUsers() models.Users
-	CreateUser(res models.Registration) (models.User, error)
+	CreateUser(res models.Registration) (int, error)
 	RemoveUser(id int) error
 	GetUserByID(id int) (models.User, error)
 	GetUserByEmail(email string) (models.User, error)

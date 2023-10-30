@@ -263,7 +263,7 @@
 
     </script>
 
-    {{ if error }}
+    {{ if (isset(error) ? true : false) }}
     <script>
         notify("{{.type}}", "{{.msg}}");
     </script>

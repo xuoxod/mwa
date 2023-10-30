@@ -81,7 +81,6 @@ func (m *Respository) About(w http.ResponseWriter, r *http.Request) {
 }
 
 func (m *Respository) Register(w http.ResponseWriter, r *http.Request) {
-	remoteIp := m.App.Session.GetString(r.Context(), "remote_ip")
 	var emptyRegistrationForm models.Registration
 	vars := make(jet.VarMap)
 	vars.Set("title", "Registration")
@@ -90,7 +89,6 @@ func (m *Respository) Register(w http.ResponseWriter, r *http.Request) {
 	data["csrftoken"] = nosurf.Token(r)
 	data["registrationform"] = emptyRegistrationForm
 	data["form"] = forms.New(nil)
-	data["remoteip"] = remoteIp
 
 	err := RenderPageWithContext(w, "landing/register.jet", vars, data)
 
@@ -144,6 +142,26 @@ func (m *Respository) PostRegister(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 		// Create new user in the database
+		userId, err := m.DB.CreateUser(registration)
+
+		if err != nil {
+			fmt.Printf("\n\t\tError creating new user:\t%s\n\n", err.Error())
+			m.App.Session.Put(r.Context(), "error", "Error registering user")
+			vars := make(jet.VarMap)
+			vars.Set("title", "Registration")
+
+			data := make(map[string]interface{})
+			data["csrftoken"] = nosurf.Token(r)
+			data["registrationform"] = registration
+			data["form"] = form
+
+			http.Redirect(w, r, "/register", http.StatusSeeOther)
+			return
+		}
+
+		if userId > 0 {
+			fmt.Println("User created successfully")
+		}
 
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
@@ -174,8 +192,6 @@ func (m *Respository) PostSignin(w http.ResponseWriter, r *http.Request) {
 
 		vars := make(jet.VarMap)
 		vars.Set("title", "Home")
-		vars.Set("headingOne", `Welcome to Awesome Web App`)
-		vars.Set("statement", `We don't Fuck around ... Either sign in to start using the site or register first then sign in.`)
 
 		data := make(map[string]interface{})
 		data["csrftoken"] = nosurf.Token(r)
@@ -197,9 +213,8 @@ func (m *Respository) PostSignin(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println("Authentication Error:\t", err.Error())
 		vars := make(jet.VarMap)
+		vars.Set("title", "Home")
 		vars.Set("error", "Authentication Error")
-		vars.Set("headingOne", `Welcome to Awesome Web App`)
-		vars.Set("statement", `We don't Fuck around ... Either sign in to start using the site or register first then sign in.`)
 
 		data := make(map[string]interface{})
 		data["type"] = "error"

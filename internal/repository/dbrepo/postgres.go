@@ -2,9 +2,11 @@ package dbrepo
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
+	"github.com/xuoxod/mwa/internal/helpers"
 	"github.com/xuoxod/mwa/internal/models"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -15,10 +17,61 @@ func (m *postgresDbRepo) AllUsers() models.Users {
 	return users
 }
 
-func (m *postgresDbRepo) CreateUser(user models.Registration) (models.User, error) {
-	var u models.User
+func (m *postgresDbRepo) CreateUser(user models.Registration) (int, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
 
-	return u, nil
+	var id, pId, sId int
+
+	stmt := `insert into krxbyhhs.public.users(first_name, last_name, email, phone, password, created_at, updated_at) values($1,$2,$3,$4,$5,$6,$7) returning id`
+
+	hashedPassword, hashPasswordErr := helpers.HashPassword(user.PasswordConfirm)
+
+	if hashPasswordErr != nil {
+		fmt.Println("Error hashing password: ", hashPasswordErr.Error())
+		return 0, hashPasswordErr
+	}
+
+	row := m.DB.QueryRowContext(ctx, stmt,
+		user.FirstName,
+		user.LastName,
+		user.Email,
+		user.Phone,
+		hashedPassword,
+		time.Now(),
+		time.Now(),
+	)
+
+	memberErr := row.Scan(&id)
+
+	if memberErr != nil {
+		fmt.Println("User Error: ", memberErr.Error())
+		return 0, memberErr
+	}
+
+	stmt = `insert into krxbyhhs.public.profiles(user_id, created_at, updated_at, user_name, display_name, image_url, address, city, state, zipcode) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) returning user_id`
+
+	row = m.DB.QueryRowContext(ctx, stmt, id, time.Now(), time.Now(), "user-name", "display-name", "image-url", "address", "city", "state", "zipcode")
+
+	memberErr = row.Scan(&pId)
+
+	if memberErr != nil {
+		fmt.Println("Profile Error: ", memberErr.Error())
+		return 0, memberErr
+	}
+
+	stmt = `insert into krxbyhhs.public.usersettings(user_id, created_at, updated_at) values($1,$2,$3) returning user_id`
+
+	row = m.DB.QueryRowContext(ctx, stmt, id, time.Now(), time.Now())
+
+	memberErr = row.Scan(&sId)
+
+	if memberErr != nil {
+		fmt.Println("Profile Error: ", memberErr.Error())
+		return 0, memberErr
+	}
+
+	return id, nil
 }
 
 func (m *postgresDbRepo) RemoveUser(id int) error {
