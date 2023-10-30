@@ -36,3 +36,11 @@ func (m *postgresDbRepo) UpdateUser(user models.User) (models.User, error) {
 
 	return u, nil
 }
+
+func (m *postgresDbRepo) Authenticate(email, testPassword string) (models.User, models.Profile, models.UserSettings, error) {
+	var user models.User
+	var profile models.Profile
+	var userSettings models.UserSettings
+
+	return user, profile, userSettings, nil
+}

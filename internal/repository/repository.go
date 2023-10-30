@@ -11,5 +11,5 @@ type DatabaseRepo interface {
 	UpdateUser(models.User) (models.User, error)
 	// UpdateUserProfile(userId int) (models.Profile, error)
 	// UpdateUserSettings(u models.UserSettings) (models.UserSettings, error)
-	// Authenticate(email, testPassword string) (models.User, models.Profile, models.UserSettings, error)
+	Authenticate(email, testPassword string) (models.User, models.Profile, models.UserSettings, error)
 }
