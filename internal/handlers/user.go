@@ -18,3 +18,13 @@ func (m *Respository) UserDashboard(w http.ResponseWriter, r *http.Request) {
 		log.Println(err.Error())
 	}
 }
+
+// @desc        Signout user
+// @route       GET /user/signout
+// @access      Private
+func (m *Respository) SignOut(w http.ResponseWriter, r *http.Request) {
+	_ = m.App.Session.Destroy(r.Context())
+	_ = m.App.Session.RenewToken(r.Context())
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
