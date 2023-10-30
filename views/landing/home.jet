@@ -40,8 +40,8 @@
                 <div class="mb-3">
                     <div class="input-group">
                         <label class="input-group-text">
-                            <strong><i class="bi bi-lock-fill"></i>
-
+                            <strong>
+                                <i class="bi bi-lock-fill"></i>
                             </strong>
                         </label>
 
