@@ -42,7 +42,7 @@
 
 <body>
     {{yield menu()}}
-    <div class="container-fluid" style="margin:2% auto;">
+    <div class="container-fluid" style="margin:5% auto;">
         {{block documentBody()}}{{end}}
     </div>
 
