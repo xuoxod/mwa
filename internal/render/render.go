@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 
 	"github.com/CloudyKit/jet"
+	"github.com/xuoxod/mwa/pkg/utils"
 )
 
 // var views = jet.NewSet(
@@ -17,6 +18,13 @@ import (
 
 var root, _ = os.Getwd()
 var views = jet.NewHTMLSet(filepath.Join(root, "views"))
+
+func InitViews() {
+	views.SetDevelopmentMode(true)
+	views.AddGlobal("appver", "0.0.3")
+	views.AddGlobal("appname", "Awesome Web App")
+	views.AddGlobal("appdate", fmt.Sprintf("%v", utils.DateTimeStamp()))
+}
 
 func RenderPage(w http.ResponseWriter, tmpl string, data map[string]string) error {
 	view, err := views.GetTemplate(tmpl)

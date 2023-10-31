@@ -15,7 +15,6 @@ import (
 	"github.com/xuoxod/mwa/internal/render"
 	"github.com/xuoxod/mwa/internal/repository"
 	"github.com/xuoxod/mwa/internal/repository/dbrepo"
-	"github.com/xuoxod/mwa/pkg/utils"
 )
 
 // Repo the repository used by the handlers
@@ -38,6 +37,7 @@ func NewRepo(a *config.AppConfig, db *driver.DB) *Respository {
 // NewHandler sets the repository for the handlers
 func NewHandler(r *Respository) {
 	Repo = r
+	render.InitViews()
 }
 
 func (m *Respository) Home(w http.ResponseWriter, r *http.Request) {
@@ -69,9 +69,6 @@ func (m *Respository) About(w http.ResponseWriter, r *http.Request) {
 
 	data := make(map[string]string)
 	data["title"] = "About"
-	data["appname"] = "Awesome Web App"
-	data["appver"] = "1.0"
-	data["appdate"] = fmt.Sprintf("%v", utils.DateTimeStamp())
 
 	err := render.RenderPage(w, "landing/about.jet", data)
 
