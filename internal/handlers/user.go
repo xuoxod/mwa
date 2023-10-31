@@ -1,18 +1,23 @@
 package handlers
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
-	"github.com/CloudyKit/jet/v6"
+	"github.com/xuoxod/mwa/internal/render"
 )
 
 func (m *Respository) UserDashboard(w http.ResponseWriter, r *http.Request) {
-	vars := make(jet.VarMap)
-	vars.Set("title", "Dashboard")
-	vars.Set("dashboard", true)
+	// vars := make(jet.VarMap)
+	// vars.Set("title", "Dashboard")
+	// vars.Set("dashboard", true)
 
-	err := RenderPage(w, "user/dashboard.jet", vars)
+	data := make(map[string]string)
+	data["title"] = "Dashboard"
+	data["dashboard"] = fmt.Sprintf("%t", true)
+
+	err := render.RenderPage(w, "user/dashboard.jet", data)
 
 	if err != nil {
 		log.Println(err.Error())
