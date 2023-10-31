@@ -60,3 +60,8 @@ type UserSettings struct {
 	ShowEmail         bool
 	ShowNotifications bool
 }
+
+// Auth variable
+type Authentication struct {
+	Auth bool
+}

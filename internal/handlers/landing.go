@@ -256,6 +256,10 @@ func (m *Respository) PostSignin(w http.ResponseWriter, r *http.Request) {
 	if user.AccessLevel == 1 {
 		m.App.Session.Put(r.Context(), "admin_id", user)
 	}
+
+	var auth models.Authentication
+	auth.Auth = true
+	m.App.Session.Put(r.Context(), "auth", auth)
 	http.Redirect(w, r, "/user", http.StatusSeeOther)
 
 }

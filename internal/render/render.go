@@ -27,10 +27,6 @@ func InitViews() {
 	views.AddGlobal("appdate", fmt.Sprintf("%v", utils.DateTimeStamp()))
 }
 
-func SetAuth(isAuth bool) {
-
-}
-
 func RenderPage(w http.ResponseWriter, tmpl string, data map[string]string) error {
 	view, err := views.GetTemplate(tmpl)
 
