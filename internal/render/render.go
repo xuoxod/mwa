@@ -22,8 +22,13 @@ var views = jet.NewHTMLSet(filepath.Join(root, "views"))
 func InitViews() {
 	views.SetDevelopmentMode(true)
 	views.AddGlobal("appver", "0.0.3")
+	views.AddGlobal("copyright", fmt.Sprintf("RmediaTech %s", utils.DateStamp()))
 	views.AddGlobal("appname", "Awesome Web App")
 	views.AddGlobal("appdate", fmt.Sprintf("%v", utils.DateTimeStamp()))
+}
+
+func SetAuth(isAuth bool) {
+
 }
 
 func RenderPage(w http.ResponseWriter, tmpl string, data map[string]string) error {
