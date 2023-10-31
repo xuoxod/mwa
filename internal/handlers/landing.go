@@ -218,7 +218,7 @@ func (m *Respository) PostSignin(w http.ResponseWriter, r *http.Request) {
 
 		data := make(map[string]interface{})
 		data["type"] = "error"
-		data["msg"] = "Account Not Found"
+		data["msg"] = "Invalid Signin Credentials"
 		data["signinform"] = signinform
 		data["form"] = form
 		data["csrftoken"] = nosurf.Token(r)
