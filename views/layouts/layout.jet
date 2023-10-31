@@ -32,6 +32,10 @@
         .nav-link {
             font-weight: bolder;
         }
+
+        .action:hover {
+            cursor: pointer;
+        }
     </style>
     <title>{{ isset(title) ? title : "" }}</title>
 </head>
@@ -441,9 +445,9 @@
                         addAttribute(li, "class", "list-group-item");
                         addAttribute(li, "id", `li-${clients[c][0]}`);
                         addAttribute(msgIcon, "id", `${clients[c][1]}`);
-                        addAttribute(msgIcon, "class", "bi bi-chat-square-text-fill text-left send-message-icon");
+                        addAttribute(msgIcon, "class", "bi bi-chat-square-text-fill text-left send-message-icon action");
                         addAttribute(trashIcon, "id", `trash-${clients[c][1]}`);
-                        addAttribute(trashIcon, "class", "bi bi-x-circle-fill text-left trash-icon");
+                        addAttribute(trashIcon, "class", "bi bi-x-circle-fill text-left trash-icon action");
                         addAttribute(dGroup, "class", "input-group");
                         addAttribute(dGroupText, "class", "input-group-text");
                         addAttribute(eGroupText, "class", "input-group-text");
