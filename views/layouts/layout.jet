@@ -28,6 +28,10 @@
             height: 100vh;
             overflow-y: scroll;
         }
+
+        .nav-link {
+            font-weight: bolder;
+        }
     </style>
     <title>{{ isset(title) ? title : "" }}</title>
 </head>
