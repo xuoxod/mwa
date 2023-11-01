@@ -1,6 +1,6 @@
 {{block documentBody()}}
-<div class="d-grid">
-    <form>
+<div class="d-grid rounded">
+    <form id="profile-form">
         <div class="input-group mb-3">
             <span class="input-group-text" id="fname">
                 <i class="bi bi-alphabet-uppercase fs-3 fw-bolder"></i>
@@ -18,13 +18,34 @@
         </div>
 
         <div class="input-group mb-3">
+            <span class="input-group-text" id="uname">
+                <i class="bi bi-alphabet-uppercase fs-3 fw-bolder"></i>
+            </span>
+            <input type="text" class="form-control" name="uname"
+                value="{{if (.profile.UserName) != ""}}{{.profile.UserName}}{{end}}{{if (.profile.UserName) == ""}}Create a username{{end}}"
+                placeholder=" User name" aria-label="uname" aria-describedby="uname" readonly>
+        </div>
+
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="iurl">
+                <i class="bi bi-alphabet-uppercase fs-3 fw-bolder"></i>
+            </span>
+            <input type="url" class="form-control" name="iurl"
+                value="{{if (.profile.ImageURL) != ""}}{{.profile.ImageURL}}{{end}}{{if (.profile.ImageURL) == ""}}Enter url to your picture{{end}}"
+                placeholder=" Phone" aria-label="iurl" aria-describedby="iurl" readonly>
+        </div>
+
+        {{if (.settings.ShowEmail)}}
+        <div class="input-group mb-3">
             <span class="input-group-text" id="email">
                 <i class="bi bi-envelope-at-fill fs-3 fw-bolder"></i>
             </span>
             <input type="text" class="form-control" name="email" value="{{.user.Email}}" placeholder="Email"
                 aria-label="email" aria-describedby="email" readonly>
         </div>
+        {{end}}
 
+        {{if (.settings.ShowPhone)}}
         <div class="input-group mb-3">
             <span class="input-group-text" id="phone">
                 <i class="bi bi-telephone-fill fs-3 fw-bolder"></i>
@@ -32,9 +53,58 @@
             <input type="text" class="form-control" name="phone" value="{{.user.Phone}}" placeholder=" Phone"
                 aria-label="phone" aria-describedby="phone" readonly>
         </div>
+        {{end}}
 
-        <div class="m-0 d-grid justify-content-start">
-            <button type="submit" class="btn btn-primary">Submit</button>
+        {{if (isset(.settings.ShowAddress))}}
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="address">
+                <i class="bi bi-geo-alt-fill fs-3 fw-bolder"></i>
+            </span>
+            <input type="text" class="form-control" name="address"
+                value="{{if (.profile.Address) != ""}}{{.profile.Address}}{{end}}{{if (.profile.Address) == ""}}Enter address{{end}}"
+                placeholder=" Address" aria-label="address" aria-describedby="address" readonly>
+        </div>
+        {{end}}
+
+        {{if (isset(.settings.ShowCity))}}
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="city">
+                <i class="bi bi-geo-alt-fill fs-3 fw-bolder"></i>
+            </span>
+            <input type="text" class="form-control" name="city"
+                value="{{if (.profile.City) != ""}}{{.profile.City}}{{end}}{{if (.profile.City) == ""}}Enter city{{end}}"
+                placeholder="City" aria-label="city" aria-describedby="city" readonly>
+        </div>
+        {{end}}
+
+        {{if (isset(.settings.ShowState))}}
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="state">
+                <i class="bi bi-geo-alt-fill fs-3 fw-bolder"></i>
+            </span>
+            <input type="text" class="form-control" name="state"
+                value="{{if (.profile.State) != ""}}{{.profile.State}}{{end}}{{if (.profile.State) == ""}}Enter state{{end}}"
+                placeholder="State" aria-label="state" aria-describedby="state" readonly>
+        </div>
+        {{end}}
+
+        {{if (isset(.settings.ShowZipcode))}}
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="zipcode">
+                <i class="bi bi-123 fs-3 fw-bolder"></i>
+            </span>
+            <input type="text" class="form-control" name="zipcode"
+                value="{{if (.profile.Zipcode) != ""}}{{.profile.Zipcode}}{{end}}{{if (.profile.Zipcode) == ""}}Enter zipcode{{end}}"
+                placeholder="Zipcode" aria-label="zipcode" aria-describedby="zipcode" readonly>
+        </div>
+        {{end}}
+
+        <div id="profile-submit-button-group" class="m-0 d-grid justify-content-start d-none">
+            <button id="profile-submit-button" type="submit" class="btn btn-primary">Submit</button>
+        </div>
+
+        <div id="profile-edit-button-group" class="m-0 d-grid justify-content-end">
+            <button id="profile-edit-button" type="button" class="btn btn-success">Edit</button>
         </div>
     </form>
 </div>

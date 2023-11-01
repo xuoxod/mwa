@@ -2,6 +2,7 @@ package dbrepo
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"time"
@@ -28,8 +29,8 @@ func (m *postgresDbRepo) CreateUser(user models.Registration) (int, error) {
 	hashedPassword, hashPasswordErr := helpers.HashPassword(user.PasswordConfirm)
 
 	if hashPasswordErr != nil {
-		fmt.Println("Error hashing password: ", hashPasswordErr.Error())
-		return 0, hashPasswordErr
+		fmt.Println("Error hashing password: ", errors.New(hashPasswordErr.Error()))
+		return 0, errors.New(hashPasswordErr.Error())
 	}
 
 	row := m.DB.QueryRowContext(ctx, stmt,
@@ -45,8 +46,8 @@ func (m *postgresDbRepo) CreateUser(user models.Registration) (int, error) {
 	memberErr := row.Scan(&id)
 
 	if memberErr != nil {
-		fmt.Println("User Error: ", memberErr.Error())
-		return 0, memberErr
+		// fmt.Println("User Error: ", errors.New(memberErr.Error()))
+		return 0, errors.New(memberErr.Error())
 	}
 
 	stmt = `insert into krxbyhhs.public.profiles(user_id, created_at, updated_at, user_name, display_name, image_url, address, city, state, zipcode) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) returning user_id`
@@ -56,8 +57,8 @@ func (m *postgresDbRepo) CreateUser(user models.Registration) (int, error) {
 	memberErr = row.Scan(&pId)
 
 	if memberErr != nil {
-		fmt.Println("Profile Error: ", memberErr.Error())
-		return 0, memberErr
+		// fmt.Println("Profile Error: ", errors.New(memberErr.Error()))
+		return 0, errors.New(memberErr.Error())
 	}
 
 	stmt = `insert into krxbyhhs.public.usersettings(user_id, created_at, updated_at, user_name) values($1,$2,$3) returning user_id`
@@ -71,8 +72,8 @@ func (m *postgresDbRepo) CreateUser(user models.Registration) (int, error) {
 	memberErr = row.Scan(&sId)
 
 	if memberErr != nil {
-		fmt.Println("Profile Error: ", memberErr.Error())
-		return 0, memberErr
+		// fmt.Println("Profile Error: ", errors.New(memberErr.Error()))
+		return 0, errors.New(memberErr.Error())
 	}
 
 	return id, nil

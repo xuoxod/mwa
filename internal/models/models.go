@@ -12,6 +12,10 @@ type Registration struct {
 	PasswordConfirm string
 }
 
+type RegistrationErrData struct {
+	Data map[string]string
+}
+
 // User signin data
 type Signin struct {
 	Email    string
@@ -59,6 +63,10 @@ type UserSettings struct {
 	ShowPhone         bool
 	ShowEmail         bool
 	ShowNotifications bool
+	ShowAddress       bool
+	ShowCity          bool
+	ShowState         bool
+	ShowZipcode       bool
 }
 
 // Auth variable

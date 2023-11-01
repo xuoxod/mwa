@@ -45,8 +45,12 @@
         }
     </style>
     <title>
-        {{ if (isset(.title)) }}
+        {{ if (isset(.title)) == true }}
         {{.title}}
+        {{end}}
+
+        {{if (isset(title))}}
+        {{title}}
         {{end}}
     </title>
 </head>
@@ -659,6 +663,61 @@
                 userNameInput.value = "";
                 registerGroup.classList.remove("d-none");
                 sendMessageGroup.classList.add("d-none");
+            }
+        });
+    </script>
+    {{end}}
+
+    {{ if (isset(dashboard))}}
+    <script>
+        const profileSubmitButtonGroup = document.querySelector("#profile-submit-button-group");
+        const profileEditButtonGroup = document.querySelector("#profile-edit-button-group");
+        const profileSubmitButton = document.querySelector("#profile-submit-button");
+        const profileEditButton = document.querySelector("#profile-edit-button");
+        const inputs = document.querySelectorAll(".form-control");
+        const profileForm = document.querySelector("#profile-form");
+        let toggler = false;
+        const objInputs = {};
+        const inputsValueChanges = {};
+
+        inputs.forEach(input => {
+            objInputs[`${input.name.trim()}`] = { name: input.name.trim(), value: input.value.trim() };
+        });
+
+        const inputValueChanged = (inputName, value) => {
+            const input = objInputs[inputName] || null;
+
+            if (null != input) {
+                return input.value == value;
+            }
+        };
+
+        log(`Inputs: ${stringify(objInputs)}\n`);
+
+        profileForm.addEventListener("submit", e => {
+            e.target.preventDefault();
+            log(`Profile form submitted\n`);
+        });
+
+        profileEditButton.addEventListener("click", () => {
+            toggler = !toggler;
+            log(`Edit button clicked\n`);
+            if (toggler) {
+                inputs.forEach(input => {
+                    log(`${input.name}\n`);
+                    input.removeAttribute("readonly");
+                });
+                profileEditButton.classList.remove("btn-success");
+                profileEditButton.classList.add("btn-warning");
+            } else {
+                inputs.forEach(input => {
+                    log(`${input.name}\n`);
+                    if (!input.hasAttribute("readonly")) {
+                        input.setAttribute("readonly", "");
+                    }
+                });
+                profileEditButton.classList.remove("btn-warning");
+                profileEditButton.classList.add("btn-success");
             }
         });
     </script>

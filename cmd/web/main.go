@@ -65,6 +65,7 @@ func run() (*driver.DB, error) {
 	gob.Register(models.Signin{})
 	gob.Register(models.Registration{})
 	gob.Register(models.Authentication{})
+	gob.Register(models.RegistrationErrData{})
 
 	app.InProduction = false
 

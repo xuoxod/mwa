@@ -59,6 +59,7 @@ func (m *Respository) UserDashboard(w http.ResponseWriter, r *http.Request) {
 	obj["profile"] = profile
 	obj["settings"] = settings
 	obj["user"] = user
+	obj["title"] = "Dashboard"
 
 	err := render.RenderPageWithContext(w, "user/dashboard.jet", data, obj)
 

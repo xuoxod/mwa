@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/CloudyKit/jet/v6"
 	"github.com/justinas/nosurf"
@@ -46,12 +47,12 @@ func (m *Respository) Home(w http.ResponseWriter, r *http.Request) {
 	// vars.Set("title", "Home")
 	var emptySigninForm models.Signin
 	data := make(map[string]string)
-	data["title"] = "Home"
 
 	obj := make(map[string]interface{})
 	obj["csrftoken"] = nosurf.Token(r)
 	obj["signinform"] = emptySigninForm
 	obj["form"] = forms.New(nil)
+	obj["title"] = "Home"
 
 	err := render.RenderPageWithContext(w, "landing/home.jet", data, obj)
 
@@ -78,16 +79,32 @@ func (m *Respository) About(w http.ResponseWriter, r *http.Request) {
 }
 
 func (m *Respository) Register(w http.ResponseWriter, r *http.Request) {
+	regData, regDataOk := m.App.Session.Get(r.Context(), "reg-error").(models.RegistrationErrData)
+
+	if !regDataOk {
+		log.Println("Cannot get reg-error data from session")
+		// m.App.ErrorLog.Println("Can't get reg-error data from the session")
+		// m.App.Session.Put(r.Context(), "error", "Can't get reg-error data from session")
+		// http.Redirect(w, r, "/register", http.StatusTemporaryRedirect)
+		// return
+	}
+
 	var emptyRegistrationForm models.Registration
 	// data := make(jet.VarMap)
 	// data.Set("title", "Registration")
 	data := make(map[string]string)
-	data["title"] = "Registration"
 
 	obj := make(map[string]interface{})
 	obj["csrftoken"] = nosurf.Token(r)
 	obj["registrationform"] = emptyRegistrationForm
 	obj["form"] = forms.New(nil)
+	obj["title"] = "Registration"
+
+	if regDataOk {
+		data["error"] = regData.Data["error"]
+		obj["type"] = regData.Data["type"]
+		obj["msg"] = regData.Data["msg"]
+	}
 
 	err := render.RenderPageWithContext(w, "landing/register.jet", data, obj)
 
@@ -144,10 +161,29 @@ func (m *Respository) PostRegister(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 		// Create new user in the database
+		// ERROR: duplicate key value violates unique constraint "users_un" (SQLSTATE 23505)
 		userId, err := m.DB.CreateUser(registration)
 
 		if err != nil {
-			fmt.Printf("\n\t\tError creating new user:\t%s\n\n", err.Error())
+			sErr := err.Error()
+			uniqueErr := strings.HasSuffix(sErr, "(SQLSTATE 23505)")
+
+			if uniqueErr {
+				fmt.Println("Record already exists")
+				var registrationErrData models.RegistrationErrData
+
+				regErrData := make(map[string]string)
+				regErrData["title"] = "Home"
+				regErrData["error"] = "Authentication Error"
+				regErrData["type"] = "error"
+				regErrData["msg"] = "Account already exists"
+
+				registrationErrData.Data = regErrData
+
+				m.App.Session.Put(r.Context(), "reg-error", registrationErrData)
+
+			}
+
 			m.App.Session.Put(r.Context(), "error", "Error registering user")
 			vars := make(jet.VarMap)
 			vars.Set("title", "Registration")
