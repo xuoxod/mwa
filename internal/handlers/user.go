@@ -51,7 +51,6 @@ func (m *Respository) UserDashboard(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := make(map[string]string)
-	data["title"] = "Dashboard"
 	data["dashboard"] = fmt.Sprintf("%t", true)
 
 	obj := make(map[string]interface{})
