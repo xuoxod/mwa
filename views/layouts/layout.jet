@@ -690,6 +690,7 @@
             if (null != input) {
                 return input.value != value;
             }
+            return false;
         };
 
         const addChangedInput = (input) => {
