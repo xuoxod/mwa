@@ -91,7 +91,7 @@
         {{if (isset(.settings.ShowZipcode))}}
         <div class="input-group mb-3">
             <span class="input-group-text" id="zipcode">
-                <i class="bi bi-123 fs-3 fw-bolder"></i>
+                <i class="bi bi-geo-alt-fill fs-3 fw-bolder"></i>
             </span>
             <input type="text" class="form-control" name="zipcode"
                 value="{{if (.profile.Zipcode) != ""}}{{.profile.Zipcode}}{{end}}{{if (.profile.Zipcode) == ""}}Enter zipcode{{end}}"
