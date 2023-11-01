@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/xuoxod/mwa/internal/forms"
 	"github.com/xuoxod/mwa/internal/models"
 	"github.com/xuoxod/mwa/internal/render"
 )
@@ -50,6 +51,8 @@ func (m *Respository) UserDashboard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var emptyUserSettingsForm models.UserSettings
+
 	data := make(map[string]string)
 	data["dashboard"] = fmt.Sprintf("%t", true)
 
@@ -57,8 +60,10 @@ func (m *Respository) UserDashboard(w http.ResponseWriter, r *http.Request) {
 	obj["auth"] = auth
 	obj["profile"] = profile
 	obj["settings"] = settings
+	obj["settingsform"] = emptyUserSettingsForm
 	obj["user"] = user
 	obj["title"] = "Dashboard"
+	obj["form"] = forms.New(nil)
 
 	err := render.RenderPageWithContext(w, "user/dashboard.jet", data, obj)
 

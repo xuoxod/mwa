@@ -1,3 +1,81 @@
 {{block documentBody()}}
-<h2>Settings</h2>
+<div class="d-grid rounded">
+    <form action="#" id="settings-form">
+        <div class="row d-grid gap-2">
+
+            <div class="input-group input-group-lg mb-4">
+                <div class="input-group-text">
+                    <input class="form-check-input mt-0" type="checkbox" {{if .settings.ShowOnlineStatus}} checked
+                        {{end}} name="showonlinestatus" value="" aria-label="Checkbox for following text input">
+                </div>
+                <input type="text" class="form-control" aria-label="Text input with checkbox" readonly
+                    value="Enable other users to see your online status">
+            </div>
+
+            <div class="input-group input-group-lg mb-4">
+                <div class="input-group-text">
+                    <input class="form-check-input mt-0" type="checkbox" {{if .settings.ShowPhone}} checked {{end}}
+                        name="showphone" value="" aria-label="Checkbox for following text input">
+                </div>
+                <input type="text" class="form-control" aria-label="Text input with checkbox" readonly
+                    value="Display your phone number on your profile tab">
+            </div>
+
+            <div class="input-group input-group-lg mb-4">
+                <div class="input-group-text">
+                    <input class="form-check-input mt-0" type="checkbox" {{if .settings.ShowEmail}} checked {{end}}
+                        name="showemail" value="" aria-label="Checkbox for following text input">
+                </div>
+                <input type="text" class="form-control" aria-label="Text input with checkbox" readonly
+                    value="Display your email on your profile tab">
+            </div>
+
+            <div class="input-group input-group-lg mb-4">
+                <div class="input-group-text">
+                    <input class="form-check-input mt-0" type="checkbox" {{if .settings.ShowNotifications}} checked
+                        {{end}} name="shownotifications" value="" aria-label="Checkbox for following text input">
+                </div>
+                <input type="text" class="form-control" aria-label="Text input with checkbox" readonly
+                    value="Enables notifications">
+            </div>
+
+            <div class="input-group input-group-lg mb-4">
+                <div class="input-group-text">
+                    <input class="form-check-input mt-0" type="checkbox" {{if .settings.ShowAddress}} checked {{end}}
+                        name="showaddress" value="" aria-label="Checkbox for following text input">
+                </div>
+                <input type="text" class="form-control" aria-label="Text input with checkbox" readonly
+                    value="Display your address on your profile tab">
+            </div>
+
+            <div class="input-group input-group-lg mb-4">
+                <div class="input-group-text">
+                    <input class="form-check-input mt-0" type="checkbox" {{if .settings.ShowCity}} checked {{end}}
+                        name="showcity" value="" aria-label="Checkbox for following text input">
+                </div>
+                <input type="text" class="form-control" aria-label="Text input with checkbox" readonly
+                    value="Display your address on your profile tab">
+            </div>
+
+            <div class="input-group input-group-lg mb-4">
+                <div class="input-group-text">
+                    <input class="form-check-input mt-0" type="checkbox" {{if .settings.ShowState}} checked {{end}}
+                        name="showonlinestatus" value="" aria-label="Checkbox for following text input">
+                </div>
+                <input type="text" class="form-control" aria-label="Text input with checkbox" readonly
+                    value="Display your state on your profile tab">
+            </div>
+
+            <div class="input-group input-group-lg mb-4">
+                <div class="input-group-text">
+                    <input class="form-check-input mt-0" type="checkbox" {{if .settings.ShowZipcode}} checked {{end}}
+                        name="showzipcode" value="" aria-label="Checkbox for following text input">
+                </div>
+                <input type="text" class="form-control" aria-label="Text input with checkbox" readonly
+                    value="Display your zipcode on your profile tab">
+            </div>
+
+        </div>
+    </form>
+</div>
 {{end}}
