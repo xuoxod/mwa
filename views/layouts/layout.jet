@@ -678,7 +678,7 @@
         const profileForm = document.querySelector("#profile-form");
         let toggler = false;
         const objInputs = {};
-        const inputsValueChanges = {};
+        const changedInputs = {};
 
         inputs.forEach(input => {
             objInputs[`${input.name.trim()}`] = { name: input.name.trim(), value: input.value.trim() };
@@ -688,7 +688,17 @@
             const input = objInputs[inputName] || null;
 
             if (null != input) {
-                return input.value == value;
+                return input.value != value;
+            }
+        };
+
+        const addChangedInput = (input) => {
+            changedInputs[`${input.name}`] = input.value;
+        };
+
+        const removeChangedInput = (inputName) => {
+            if (changedInputs.hasOwnProperty(inputName)) {
+                delete changedInputs[`${inputName}`];
             }
         };
 
@@ -719,6 +729,26 @@
                 profileEditButton.classList.remove("btn-warning");
                 profileEditButton.classList.add("btn-success");
             }
+        });
+
+        inputs.forEach(input => {
+            input.addEventListener("keyup", e => {
+                if (inputValueChanged(e.target.name.trim(), e.target.value.trim())) {
+                    log(`Element ${e.target.name}'s value has changed\n`);
+                    addChangedInput(e.target);
+                } else {
+                    log(`Element ${e.target.name}'s value was changed back\n`);
+                    removeChangedInput(e.target.name.trim());
+                }
+
+                if (Object.keys(changedInputs).length > 0) {
+                    profileSubmitButtonGroup.classList.remove("d-none");
+                } else {
+                    if (!profileEditButtonGroup.classList.contains("d-none")) {
+                        profileSubmitButtonGroup.classList.add("d-none");
+                    }
+                }
+            });
         });
     </script>
     {{end}}
