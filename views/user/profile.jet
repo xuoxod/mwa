@@ -99,12 +99,14 @@
         </div>
         {{end}}
 
-        <div id="profile-submit-button-group" class="m-0 d-grid justify-content-start d-none">
-            <button id="profile-submit-button" type="submit" class="btn btn-primary">Submit</button>
-        </div>
+        <div class="d-flex justify-content-between">
+            <div id="profile-submit-button-group" class="m-0 d-grid justify-content-start d-none">
+                <button id="profile-submit-button" type="submit" class="btn btn-primary">Submit</button>
+            </div>
 
-        <div id="profile-edit-button-group" class="m-0 d-grid justify-content-end">
-            <button id="profile-edit-button" type="button" class="btn btn-success">Edit</button>
+            <div id="profile-edit-button-group" class="m-0 d-grid justify-content-end">
+                <button id="profile-edit-button" type="button" class="btn btn-success">Edit</button>
+            </div>
         </div>
     </form>
 </div>
