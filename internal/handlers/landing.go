@@ -83,15 +83,9 @@ func (m *Respository) Register(w http.ResponseWriter, r *http.Request) {
 
 	if !regDataOk {
 		log.Println("Cannot get reg-error data from session")
-		// m.App.ErrorLog.Println("Can't get reg-error data from the session")
-		// m.App.Session.Put(r.Context(), "error", "Can't get reg-error data from session")
-		// http.Redirect(w, r, "/register", http.StatusTemporaryRedirect)
-		// return
 	}
 
 	var emptyRegistrationForm models.Registration
-	// data := make(jet.VarMap)
-	// data.Set("title", "Registration")
 	data := make(map[string]string)
 
 	obj := make(map[string]interface{})
@@ -179,12 +173,9 @@ func (m *Respository) PostRegister(w http.ResponseWriter, r *http.Request) {
 				regErrData["msg"] = "Account already exists"
 
 				registrationErrData.Data = regErrData
-
 				m.App.Session.Put(r.Context(), "reg-error", registrationErrData)
-
 			}
 
-			m.App.Session.Put(r.Context(), "error", "Error registering user")
 			vars := make(jet.VarMap)
 			vars.Set("title", "Registration")
 
@@ -253,9 +244,6 @@ func (m *Respository) PostSignin(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		fmt.Println("Authentication Error:\t", err.Error())
-		// vars := make(jet.VarMap)
-		// vars.Set("title", "Home")
-		// vars.Set("error", "Authentication Error")
 
 		vars := make(map[string]string)
 		vars["title"] = "Home"
