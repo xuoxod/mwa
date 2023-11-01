@@ -133,7 +133,7 @@ func Auth(next http.Handler) http.Handler {
 func Unauth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if helpers.IsAuthenticated(r) {
-			session.Put(r.Context(), "warning", "Resource not found")
+			// session.Put(r.Context(), "warning", "Resource not found")
 			http.Redirect(w, r, "/user", http.StatusSeeOther)
 			return
 		}
