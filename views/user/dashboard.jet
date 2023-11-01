@@ -21,7 +21,7 @@
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="disabled-tab" data-bs-toggle="tab"
                             data-bs-target="#disabled-tab-pane" type="button" role="tab"
-                            aria-controls="disabled-tab-pane" aria-selected="false" disabled>Disabled</button>
+                            aria-controls="disabled-tab-pane" aria-selected="false" disabled>Account</button>
                     </li>
                 </ul>
 

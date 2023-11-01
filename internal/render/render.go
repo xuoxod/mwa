@@ -63,7 +63,7 @@ func RenderPageWithContext(w http.ResponseWriter, tmpl string, data map[string]s
 	vmap := make(jet.VarMap)
 
 	for k, v := range data {
-		vmap.Set(k, v)
+		vmap.Set(k, &v)
 	}
 
 	err = view.Execute(w, vmap, obj)

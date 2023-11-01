@@ -44,7 +44,11 @@
             cursor: pointer;
         }
     </style>
-    <title>{{ isset(title) ? title : "" }}</title>
+    <title>
+        {{ if (isset(.title)) }}
+        {{.title}}
+        {{end}}
+    </title>
 </head>
 
 <body>

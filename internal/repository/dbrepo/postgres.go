@@ -60,9 +60,13 @@ func (m *postgresDbRepo) CreateUser(user models.Registration) (int, error) {
 		return 0, memberErr
 	}
 
-	stmt = `insert into krxbyhhs.public.usersettings(user_id, created_at, updated_at) values($1,$2,$3) returning user_id`
+	stmt = `insert into krxbyhhs.public.usersettings(user_id, created_at, updated_at, user_name) values($1,$2,$3) returning user_id`
 
-	row = m.DB.QueryRowContext(ctx, stmt, id, time.Now(), time.Now())
+	// Create unique username
+
+	username := fmt.Sprintf("%s-%s", user.LastName, user.Email)
+
+	row = m.DB.QueryRowContext(ctx, stmt, id, time.Now(), time.Now(), username)
 
 	memberErr = row.Scan(&sId)
 

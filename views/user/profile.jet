@@ -1,3 +1,41 @@
 {{block documentBody()}}
-<h2>Profile</h2>
+<div class="d-grid">
+    <form>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="fname">
+                <i class="bi bi-alphabet-uppercase fs-3 fw-bolder"></i>
+            </span>
+            <input type="text" class="form-control" name="fname" value="{{.user.FirstName}}" placeholder="First name"
+                aria-label="firstname" aria-describedby="fname" readonly>
+        </div>
+
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="lname">
+                <i class="bi bi-alphabet-uppercase fs-3 fw-bolder"></i>
+            </span>
+            <input type="text" class="form-control" name="lname" value="{{.user.LastName}}" placeholder="Last name"
+                aria-label="lastname" aria-describedby="lname" readonly>
+        </div>
+
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="email">
+                <i class="bi bi-envelope-at-fill fs-3 fw-bolder"></i>
+            </span>
+            <input type="text" class="form-control" name="email" value="{{.user.Email}}" placeholder="Email"
+                aria-label="email" aria-describedby="email" readonly>
+        </div>
+
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="phone">
+                <i class="bi bi-telephone-fill fs-3 fw-bolder"></i>
+            </span>
+            <input type="text" class="form-control" name="phone" value="{{.user.Phone}}" placeholder=" Phone"
+                aria-label="phone" aria-describedby="phone" readonly>
+        </div>
+
+        <div class="m-0 d-grid justify-content-start">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</div>
 {{end}}
