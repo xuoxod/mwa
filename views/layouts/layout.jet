@@ -743,9 +743,11 @@
 
                 if (Object.keys(changedInputs).length > 0) {
                     profileSubmitButtonGroup.classList.remove("d-none");
+                    profileEditButton.innerText = "Save";
                 } else {
                     if (!profileEditButtonGroup.classList.contains("d-none")) {
                         profileSubmitButtonGroup.classList.add("d-none");
+                        profileEditButton.innerText = "Edit";
                     }
                 }
             });
