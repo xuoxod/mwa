@@ -8,9 +8,6 @@
                 <li id="chat-window-toggle-li" class="list-group-item">
                     <a href="#" id="chat-window-toggle" class="nav-link text-black p-0 d-inline-block">Show Chat</a>
                 </li>
-                <li class="list-group-item nav-item text-black">A third item</li>
-                <li class="list-group-item nav-item text-black">A fourth item</li>
-                <li class="list-group-item nav-item text-black">And a fifth one</li>
             </ul>
         </div>
 
@@ -20,9 +17,7 @@
                     <h2>Online Users</h2>
 
                     <div class="badge bg-primary text-wrap text-center m-auto d-inline-grid" style="width: auto;">
-                        <p id="online-users" class="m-0 p-0">
-
-                        </p>
+                        <p id="online-users" class="m-0 p-0"></p>
                     </div>
                 </div>
 

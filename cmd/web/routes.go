@@ -37,12 +37,9 @@ func routes() http.Handler {
 		mux.Get("/signout", handlers.Repo.SignOut)
 	})
 
-	mux.Route("/ws", func(mux chi.Router) {
-		mux.Get("/", handlers.Repo.WsEndpoint)
-	})
-
 	mux.Route("/public", func(mux chi.Router) {
 		mux.Get("/", handlers.Repo.Dashboard)
+		mux.Get("/chat", handlers.Repo.WsEndpoint)
 	})
 
 	return mux

@@ -51,7 +51,8 @@ func (m *Respository) UserDashboard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var emptyUserSettingsForm models.UserSettings
+	var emptyUserProfileForm models.Profile
+	var emptyUserForm models.User
 
 	data := make(map[string]string)
 	data["dashboard"] = fmt.Sprintf("%t", true)
@@ -60,7 +61,8 @@ func (m *Respository) UserDashboard(w http.ResponseWriter, r *http.Request) {
 	obj["auth"] = auth
 	obj["profile"] = profile
 	obj["settings"] = settings
-	obj["settingsform"] = emptyUserSettingsForm
+	obj["profileform"] = emptyUserProfileForm
+	obj["userform"] = emptyUserForm
 	obj["user"] = user
 	obj["title"] = "Dashboard"
 	obj["form"] = forms.New(nil)

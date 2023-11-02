@@ -9,10 +9,6 @@ import (
 )
 
 func (m *Respository) Dashboard(w http.ResponseWriter, r *http.Request) {
-	// vars := make(jet.VarMap)
-	// vars.Set("title", "Public")
-	// vars.Set("public", true)
-
 	data := make(map[string]string)
 	data["title"] = "Public"
 	data["public"] = fmt.Sprintf("%t", true)
