@@ -17,9 +17,6 @@ func routes() http.Handler {
 	mux.Use(middleware.NoCache)
 	mux.Use(NoSurf)
 
-	fileserver := http.FileServer(http.Dir("./static/"))
-	mux.Handle("/static/", http.StripPrefix("/static", fileserver))
-
 	mux.Route("/", func(mux chi.Router) {
 		mux.Use(SessionLoad)
 		mux.Use(Unauth)
@@ -41,6 +38,11 @@ func routes() http.Handler {
 		mux.Get("/", handlers.Repo.Dashboard)
 		mux.Get("/chat", handlers.Repo.WsEndpoint)
 	})
+
+	fileserver := http.FileServer(http.Dir("./static/"))
+	mux.Handle("/static/*", http.StripPrefix("/static", fileserver))
+
+	// router.Handle("/static/*", http.StripPrefix("/static/", fs))
 
 	return mux
 }
