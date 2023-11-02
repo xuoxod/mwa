@@ -705,10 +705,10 @@
             }
         };
 
-        log(`Inputs: ${stringify(objInputs)}\n`);
+        // log(`Inputs: ${stringify(objInputs)}\n`);
 
         profileForm.addEventListener("submit", e => {
-            e.target.preventDefault();
+            e.preventDefault();
             log(`Profile form submitted\n`);
         });
 
@@ -717,14 +717,14 @@
             log(`Edit button clicked\n`);
             if (toggler) {
                 inputs.forEach(input => {
-                    log(`${input.name}\n`);
+                    // log(`${input.name}\n`);
                     input.removeAttribute("readonly");
                 });
                 profileEditButton.classList.remove("btn-success");
                 profileEditButton.classList.add("btn-warning");
             } else {
                 inputs.forEach(input => {
-                    log(`${input.name}\n`);
+                    // log(`${input.name}\n`);
                     if (!input.hasAttribute("readonly")) {
                         input.setAttribute("readonly", "");
                     }
@@ -737,10 +737,10 @@
         inputs.forEach(input => {
             input.addEventListener("keyup", e => {
                 if (inputValueChanged(e.target.name.trim(), e.target.value.trim())) {
-                    log(`Element ${e.target.name}'s value has changed\n`);
+                    // log(`Element ${e.target.name}'s value has changed\n`);
                     addChangedInput(e.target);
                 } else {
-                    log(`Element ${e.target.name}'s value was changed back\n`);
+                    // log(`Element ${e.target.name}'s value was changed back\n`);
                     removeChangedInput(e.target.name.trim());
                 }
 

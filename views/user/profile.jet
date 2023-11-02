@@ -50,7 +50,7 @@
             <span class="input-group-text" id="phone">
                 <i class="bi bi-telephone-fill fs-3 fw-bolder"></i>
             </span>
-            <input type="text" class="form-control" name="phone" value="{{.user.Phone}}" placeholder=" Phone"
+            <input type="phone" class="form-control" name="phone" value="{{.user.Phone}}" placeholder=" Phone"
                 aria-label="phone" aria-describedby="phone" readonly>
         </div>
         {{end}}
