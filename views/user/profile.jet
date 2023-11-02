@@ -99,7 +99,7 @@
         </div>
         {{end}}
 
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between row">
             <div id="profile-submit-button-group" class="m-0 d-grid justify-content-start d-none">
                 <button id="profile-submit-button" type="submit" class="btn btn-primary">Submit</button>
             </div>

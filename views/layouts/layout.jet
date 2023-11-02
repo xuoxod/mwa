@@ -22,30 +22,7 @@
     <link href="/static/css/app.css" rel="stylesheet">
 
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
-    <style>
-        .notie-container {
-            box-shadow: none;
-        }
 
-        ::-webkit-scrollbar {
-            -webkit-backface-visibility: hidden;
-        }
-
-        #chat-transcript {
-            position: relative;
-            max-height: 500px;
-            height: 100vh;
-            overflow-y: scroll;
-        }
-
-        .nav-link {
-            font-weight: bolder;
-        }
-
-        .action:hover {
-            cursor: pointer;
-        }
-    </style>
     <title>
         {{ if (isset(.title)) == true }}
         {{.title}}

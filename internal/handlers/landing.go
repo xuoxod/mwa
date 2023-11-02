@@ -159,6 +159,7 @@ func (m *Respository) PostRegister(w http.ResponseWriter, r *http.Request) {
 		userId, err := m.DB.CreateUser(registration)
 
 		if err != nil {
+			fmt.Println(err)
 			sErr := err.Error()
 			uniqueErr := strings.HasSuffix(sErr, "(SQLSTATE 23505)")
 

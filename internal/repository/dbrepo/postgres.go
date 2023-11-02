@@ -50,9 +50,13 @@ func (m *postgresDbRepo) CreateUser(user models.Registration) (int, error) {
 		return 0, errors.New(memberErr.Error())
 	}
 
+	// Create unique username
+
+	username := fmt.Sprintf("%s-%s", user.LastName, user.Email)
+
 	stmt = `insert into krxbyhhs.public.profiles(user_id, created_at, updated_at, user_name, display_name, image_url, address, city, state, zipcode) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) returning user_id`
 
-	row = m.DB.QueryRowContext(ctx, stmt, id, time.Now(), time.Now(), "user-name", "display-name", "image-url", "address", "city", "state", "zipcode")
+	row = m.DB.QueryRowContext(ctx, stmt, id, time.Now(), time.Now(), username, "display-name", "image-url", "address", "city", "state", "zipcode")
 
 	memberErr = row.Scan(&pId)
 
@@ -61,13 +65,9 @@ func (m *postgresDbRepo) CreateUser(user models.Registration) (int, error) {
 		return 0, errors.New(memberErr.Error())
 	}
 
-	stmt = `insert into krxbyhhs.public.usersettings(user_id, created_at, updated_at, user_name) values($1,$2,$3) returning user_id`
+	stmt = `insert into krxbyhhs.public.usersettings(user_id, created_at, updated_at) values($1,$2,$3) returning user_id`
 
-	// Create unique username
-
-	username := fmt.Sprintf("%s-%s", user.LastName, user.Email)
-
-	row = m.DB.QueryRowContext(ctx, stmt, id, time.Now(), time.Now(), username)
+	row = m.DB.QueryRowContext(ctx, stmt, id, time.Now(), time.Now())
 
 	memberErr = row.Scan(&sId)
 
