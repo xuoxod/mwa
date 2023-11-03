@@ -219,10 +219,6 @@ func (m *Respository) PostSignin(w http.ResponseWriter, r *http.Request) {
 
 	if !form.Valid() {
 		fmt.Println(form.Errors)
-
-		// vars := make(jet.VarMap)
-		// vars.Set("title", "Home")
-
 		data := make(map[string]string)
 		data["title"] = "Home"
 

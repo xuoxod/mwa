@@ -68,6 +68,13 @@ func (f *Form) IsEmail(field string) {
 	}
 }
 
+// IsEmail checks for valid email address
+func (f *Form) IsUrl(field string) {
+	if !govalidator.IsURL(f.Get(field)) {
+		f.Errors.Add(field, "Malformed URL")
+	}
+}
+
 // PasswordsMatch checks that passwords are equal
 func (f *Form) PasswordsMatch(field1 string, field2 string, r *http.Request) {
 	p1 := r.Form.Get(field1)

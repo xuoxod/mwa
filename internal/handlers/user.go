@@ -1,11 +1,14 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 
+	"github.com/justinas/nosurf"
 	"github.com/xuoxod/mwa/internal/forms"
+	"github.com/xuoxod/mwa/internal/helpers"
 	"github.com/xuoxod/mwa/internal/models"
 	"github.com/xuoxod/mwa/internal/render"
 )
@@ -51,9 +54,6 @@ func (m *Respository) UserDashboard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var emptyUserProfileForm models.Profile
-	var emptyUserForm models.User
-
 	data := make(map[string]string)
 	data["dashboard"] = fmt.Sprintf("%t", true)
 
@@ -61,9 +61,8 @@ func (m *Respository) UserDashboard(w http.ResponseWriter, r *http.Request) {
 	obj["auth"] = auth
 	obj["profile"] = profile
 	obj["settings"] = settings
-	obj["profileform"] = emptyUserProfileForm
-	obj["userform"] = emptyUserForm
 	obj["user"] = user
+	obj["csrftoken"] = nosurf.Token(r)
 	obj["title"] = "Dashboard"
 	obj["form"] = forms.New(nil)
 
@@ -71,6 +70,110 @@ func (m *Respository) UserDashboard(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Println(err.Error())
+	}
+}
+
+// @desc        Update profile
+// @route       POST /user/profile
+// @access      Private
+func (m *Respository) ProfilePost(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Post profile")
+
+	err := r.ParseForm()
+
+	if err != nil {
+		fmt.Printf("\n\tError parsing user profile form")
+		helpers.ServerError(w, err)
+		return
+	}
+
+	parsedProfile := models.Profile{
+		UserName: r.Form.Get("uname"),
+		ImageURL: r.Form.Get("iurl"),
+		Address:  r.Form.Get("address"),
+		City:     r.Form.Get("city"),
+		State:    r.Form.Get("state"),
+		Zipcode:  r.Form.Get("zipcode"),
+	}
+
+	parsedUser := models.User{
+		FirstName: r.Form.Get("fname"),
+		LastName:  r.Form.Get("lname"),
+		Email:     r.Form.Get("email"),
+		Phone:     r.Form.Get("phone"),
+	}
+
+	// form validation
+	form := forms.New(r.PostForm)
+	form.IsEmail("email")
+	form.IsUrl("iurl")
+	form.Required("fname", "lname", "email", "phone")
+
+	obj := make(map[string]interface{})
+
+	if !form.Valid() {
+		fmt.Println("Form Errors: ", form.Errors)
+		obj["profileform"] = parsedProfile
+		obj["userform"] = parsedUser
+		obj["ok"] = false
+
+		if form.Errors.Get("email") != "" {
+			obj["email"] = form.Errors.Get("email")
+		}
+
+		if form.Errors.Get("iurl") != "" {
+			obj["iurl"] = form.Errors.Get("iurl")
+		}
+		if form.Errors.Get("fname") != "" {
+			obj["fname"] = form.Errors.Get("fname")
+		}
+		if form.Errors.Get("lname") != "" {
+			obj["lname"] = form.Errors.Get("lname")
+		}
+		if form.Errors.Get("email") != "" {
+			obj["email"] = form.Errors.Get("email")
+		}
+		if form.Errors.Get("phone") != "" {
+			obj["phone"] = form.Errors.Get("phone")
+		}
+
+		out, err := json.MarshalIndent(obj, "", " ")
+
+		if err != nil {
+			log.Println(err)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(200)
+		num, rErr := w.Write(out)
+
+		if rErr != nil {
+			log.Println(err)
+		}
+
+		log.Printf("Response Writer's returned integer: %d\n", num)
+	} else {
+		// Update user and their profile then return it
+
+		obj["user"] = parsedUser
+		obj["profile"] = parsedProfile
+		obj["ok"] = true
+
+		out, err := json.MarshalIndent(obj, "", " ")
+
+		if err != nil {
+			log.Println(err)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(200)
+		num, rErr := w.Write(out)
+
+		if rErr != nil {
+			log.Println(err)
+		}
+
+		log.Printf("Response Writer's returned integer: %d\n", num)
 	}
 }
 

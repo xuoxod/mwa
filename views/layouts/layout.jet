@@ -19,7 +19,7 @@
 
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
-    <link href="/static/css/app.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
 
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
 
@@ -655,6 +655,15 @@
         const profileEditButton = document.querySelector("#profile-edit-button");
         const inputs = document.querySelectorAll(".form-control");
         const profileForm = document.querySelector("#profile-form");
+        const fnameGroup = document.querySelector("#fname-group");
+        const lnameGroup = document.querySelector("#lname-group");
+        const unameGroup = document.querySelector("#uname-group");
+        const emailGroup = document.querySelector("#email");
+        const phoneGroup = document.querySelector("#phone");
+        const addressGroup = document.querySelector("#address");
+        const cityGroup = document.querySelector("#city");
+        const stateGroup = document.querySelector("#state");
+        const zipcodeGroup = document.querySelector("#zipcode");
         let toggler = false;
         const objInputs = {};
         const changedInputs = {};
@@ -682,11 +691,282 @@
             }
         };
 
-        // log(`Inputs: ${stringify(objInputs)}\n`);
+        const handleFormError = data => {
+            const profileForm = data["profileform"];
+            const userForm = data["userform"];
+
+            if (data["fname"]) {
+                const parentCount = countChildren(document.querySelector("#fname-group"));
+
+                if (parentCount > 2) {
+                    document.querySelector("#fname-group").lastChild.remove();
+                }
+
+                const span = newElement("span");
+                addAttribute(span, "class", "input-group-text text-danger");
+                addAttribute(span, "id", "fname-error");
+                span.innerText = data["fname"];
+                appendChild(document.querySelector("#fname-group"), span);
+
+            } else {
+                if (document.querySelector("#fname-error")) {
+                    document.querySelector("#fname-error").remove();
+                }
+            }
+
+            if (data["lname"]) {
+                const parentCount = countChildren(document.querySelector("#lname-group"));
+
+                if (parentCount > 2) {
+                    document.querySelector("#lname-group").lastChild.remove();
+                }
+
+                const span = newElement("span");
+                addAttribute(span, "class", "input-group-text text-danger");
+                addAttribute(span, "id", "lname-error");
+                span.innerText = data["lname"];
+                appendChild(document.querySelector("#lname-group"), span);
+
+            } else {
+                if (document.querySelector("#lname-error")) {
+                    document.querySelector("#lname-error").remove();
+                }
+            }
+
+
+            if (data["uname"]) {
+                const parentCount = countChildren(document.querySelector("#uname-group"));
+
+                if (parentCount > 2) {
+                    document.querySelector("#uname-group").lastChild.remove();
+                }
+
+                const span = newElement("span");
+                addAttribute(span, "class", "input-group-text text-danger");
+                addAttribute(span, "id", "uname-error");
+                span.innerText = data["uname"];
+                appendChild(document.querySelector("#uname-group"), span);
+
+            } else {
+                if (document.querySelector("#uname-error")) {
+                    document.querySelector("#uname-error").remove();
+                }
+            }
+
+
+            if (data["iurl"]) {
+                const parentCount = countChildren(document.querySelector("#iurl-group"));
+
+                if (parentCount > 2) {
+                    document.querySelector("#iurl-group").lastChild.remove();
+                }
+
+                const span = newElement("span");
+                addAttribute(span, "class", "input-group-text text-danger");
+                addAttribute(span, "id", "iurl-error");
+                span.innerText = data["iurl"];
+                appendChild(document.querySelector("#iurl-group"), span);
+
+            } else {
+                if (document.querySelector("#iurl-error")) {
+                    document.querySelector("#iurl-error").remove();
+                }
+            }
+
+            if (data["email"]) {
+                const parentCount = countChildren(document.querySelector("#email-group"));
+
+                if (parentCount > 2) {
+                    document.querySelector("#email-group").lastChild.remove();
+                }
+
+                const span = newElement("span");
+                addAttribute(span, "class", "input-group-text text-danger");
+                addAttribute(span, "id", "email-error");
+                span.innerText = data["email"];
+                appendChild(document.querySelector("#email-group"), span);
+
+            } else {
+                if (document.querySelector("#email-error")) {
+                    document.querySelector("#email-error").remove();
+                }
+            }
+
+            if (data["phone"]) {
+                const parentCount = countChildren(document.querySelector("#phone-group"));
+
+                if (parentCount > 2) {
+                    document.querySelector("#phone-group").lastChild.remove();
+                }
+
+                const span = newElement("span");
+                addAttribute(span, "class", "input-group-text text-danger");
+                addAttribute(span, "id", "phone-error");
+                span.innerText = data["phone"];
+                appendChild(document.querySelector("#phone-group"), span);
+
+            } else {
+                if (document.querySelector("#phone-error")) {
+                    document.querySelector("#phone-error").remove();
+                }
+            }
+
+            if (data["address"]) {
+                const parentCount = countChildren(document.querySelector("#address-group"));
+
+                if (parentCount > 2) {
+                    document.querySelector("#address-group").lastChild.remove();
+                }
+
+                const span = newElement("span");
+                addAttribute(span, "class", "input-group-text text-danger");
+                addAttribute(span, "id", "address-error");
+                span.innerText = data["address"];
+                appendChild(document.querySelector("#address-group"), span);
+
+            } else {
+                if (document.querySelector("#address-error")) {
+                    document.querySelector("#address-error").remove();
+                }
+            }
+
+            if (data["city"]) {
+                const parentCount = countChildren(document.querySelector("#city-group"));
+
+                if (parentCount > 2) {
+                    document.querySelector("#city-group").lastChild.remove();
+                }
+
+                const span = newElement("span");
+                addAttribute(span, "class", "input-group-text text-danger");
+                addAttribute(span, "id", "city-error");
+                span.innerText = data["city"];
+                appendChild(document.querySelector("#city-group"), span);
+
+            } else {
+                if (document.querySelector("#city-error")) {
+                    document.querySelector("#city-error").remove();
+                }
+            }
+
+            if (data["state"]) {
+                const parentCount = countChildren(document.querySelector("#state-group"));
+
+                if (parentCount > 2) {
+                    document.querySelector("#state-group").lastChild.remove();
+                }
+
+                const span = newElement("span");
+                addAttribute(span, "class", "input-group-text text-danger");
+                addAttribute(span, "id", "state-error");
+                span.innerText = data["state"];
+                appendChild(document.querySelector("#state-group"), span);
+
+            } else {
+                if (document.querySelector("#state-error")) {
+                    document.querySelector("#state-error").remove();
+                }
+            }
+
+            if (data["zipcode"]) {
+                const parentCount = countChildren(document.querySelector("#zipcode-group"));
+
+                if (parentCount > 2) {
+                    document.querySelector("#zipcode-group").lastChild.remove();
+                }
+
+                const span = newElement("span");
+                addAttribute(span, "class", "input-group-text text-danger");
+                addAttribute(span, "id", "zipcode-error");
+                span.innerText = data["zipcode"];
+                appendChild(document.querySelector("#zipcode-group"), span);
+
+            } else {
+                if (document.querySelector("#zipcode-error")) {
+                    document.querySelector("#zipcode-error").remove();
+                }
+            }
+        }
+
+        const handleFormSuccess = data => {
+            log(`User updated\n`);
+
+            if (document.querySelector("#fname-error")) {
+                document.querySelector("#fname-error").remove();
+            }
+
+            if (document.querySelector("#lname-error")) {
+                document.querySelector("#lname-error").remove();
+            }
+
+            if (document.querySelector("#uname-error")) {
+                document.querySelector("#uname-error").remove();
+            }
+
+            if (document.querySelector("#email-error")) {
+                document.querySelector("#email-error").remove();
+            }
+
+            if (document.querySelector("#phone-error")) {
+                document.querySelector("#phone-error").remove();
+            }
+
+            if (document.querySelector("#iurl-error")) {
+                document.querySelector("#iurl-error").remove();
+            }
+
+            if (document.querySelector("#address-error")) {
+                document.querySelector("#address-error").remove();
+            }
+
+            if (document.querySelector("#city-error")) {
+                document.querySelector("#city-error").remove();
+            }
+
+            if (document.querySelector("#state-error")) {
+                document.querySelector("#state-error").remove();
+            }
+
+            if (document.querySelector("#zipcode-error")) {
+                document.querySelector("#zipcode-error").remove();
+            }
+        };
+
+
+        const submitProfileForm = () => {
+            const url = '/user/profile';
+            const formData = new FormData(profileForm);
+            formData.append("csrf_token", "{{.csrftoken}}");
+
+            log(`Sending form data: ${stringify(formData)}\n`);
+
+            try {
+                fetch("/user/profile", {
+                    method: "post",
+                    body: formData,
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data["ok"] == false) {
+                            handleFormError(data);
+                        } else {
+                            handleFormSuccess(data);
+                        }
+                    });
+            } catch (err) {
+                log(err);
+            }
+        };
 
         profileForm.addEventListener("submit", e => {
             e.preventDefault();
             log(`Profile form submitted\n`);
+            try {
+                submitProfileForm();
+            } catch (err) {
+                log(err);
+            }
+            return;
         });
 
         profileEditButton.addEventListener("click", () => {

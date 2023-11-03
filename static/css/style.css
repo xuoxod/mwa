@@ -1,22 +1,27 @@
 .notie-container {
-     box-shadow: none;
- }
+    box-shadow: none;
+}
 
- ::-webkit-scrollbar {
-     -webkit-backface-visibility: hidden;
- }
+::-webkit-scrollbar {
+    -webkit-backface-visibility: hidden;
+}
 
- #chat-transcript {
-     position: relative;
-     max-height: 500px;
-     height: 100vh;
-     overflow-y: scroll;
- }
+#chat-transcript {
+    position: relative;
+    max-height: 500px;
+    height: 100vh;
+    overflow-y: scroll;
+}
 
- .nav-link {
-     font-weight: bolder;
- }
+.nav-link {
+    font-weight: bolder;
+}
 
- .action:hover {
-     cursor: pointer;
- }
+.action:hover {
+    cursor: pointer;
+}
+
+.parent-container {
+    max-height: 88%;
+    overflow-y: scroll;
+}

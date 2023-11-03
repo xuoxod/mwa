@@ -96,10 +96,15 @@ func (m *postgresDbRepo) GetUserByEmail(email string) (models.User, error) {
 	return user, nil
 }
 
-func (m *postgresDbRepo) UpdateUser(user models.User) (models.User, error) {
+// UpdateUser: update the user and profile
+// @param models.User: first & last names, email, phone
+// @param models.Profile: username, image url, address, city, state, zipcode
+// @return models.User, models.Profile and error
+func (m *postgresDbRepo) UpdateUser(user models.User, profile models.Profile) (models.User, models.Profile, error) {
 	var u models.User
+	var p models.Profile
 
-	return u, nil
+	return u, p, nil
 }
 
 func (m *postgresDbRepo) Authenticate(email, testPassword string) (models.User, models.Profile, models.UserSettings, error) {
