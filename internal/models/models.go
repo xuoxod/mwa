@@ -57,16 +57,17 @@ type Profile struct {
 
 // User settings
 type UserSettings struct {
-	ID                int
-	UserID            int
-	ShowOnlineStatus  bool
-	ShowPhone         bool
-	ShowEmail         bool
-	ShowNotifications bool
-	ShowAddress       bool
-	ShowCity          bool
-	ShowState         bool
-	ShowZipcode       bool
+	ID                       int
+	UserID                   int
+	ShowOnlineStatus         bool
+	ShowPhone                bool
+	ShowEmail                bool
+	EnableSmsNotifications   bool
+	EnableEmailNotifications bool
+	ShowAddress              bool
+	ShowCity                 bool
+	ShowState                bool
+	ShowZipcode              bool
 }
 
 // Auth variable

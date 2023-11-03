@@ -1014,6 +1014,20 @@
         });
     </script>
     {{end}}
+
+    {{if (isset(settings))}}
+    <script>
+        const settingsForm = document.querySelector("#setings-form");
+        const showOnlineStatus = document.querySelector("#show-online-status");
+        const showProfile = document.querySelector("#show-profile");
+        const showAddress = document.querySelector("#show-address");
+        const showCity = document.querySelector("#show-city");
+        const showState = document.querySelector("#show-state");
+        const showZipcode = document.querySelector("#show-zipcode");
+        const receiveEmailNotifications = document.querySelector("#receive-email-notifications");
+        const receiveSmsNotifications = document.querySelector("#received-sms-notifications");
+    </script>
+    {{end}}
 </body>
 
 </html>

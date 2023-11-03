@@ -1,3 +1,7 @@
 {{block documentBody()}}
-
+<div class="container-fluid justify-content-center rounded mt-2">
+    <h3 class="text-center">
+        Account
+    </h3>
+</div>
 {{end}}

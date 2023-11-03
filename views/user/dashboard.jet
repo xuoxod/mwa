@@ -7,9 +7,15 @@
             <div class="col-auto col-12">
                 <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="profile-tab" data-bs-toggle="tab"
+                        <button class="nav-link active" id="account-tab" data-bs-toggle="tab"
+                            data-bs-target="#account-tab-pane" type="button" role="tab"
+                            aria-controls="account-tab-pane" aria-selected="false">Account</button>
+                    </li>
+
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="profile-tab" data-bs-toggle="tab"
                             data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane"
-                            aria-selected="true">Profile</button>
+                            aria-selected="false">Profile</button>
                     </li>
 
                     <li class="nav-item" role="presentation">
@@ -17,28 +23,19 @@
                             data-bs-target="#settings-tab-pane" type="button" role="tab"
                             aria-controls="settings-tab-pane" aria-selected="false">Settings</button>
                     </li>
-
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="disabled-tab" data-bs-toggle="tab"
-                            data-bs-target="#disabled-tab-pane" type="button" role="tab"
-                            aria-controls="disabled-tab-pane" aria-selected="false" disabled>Account</button>
-                    </li>
                 </ul>
 
                 <div class="tab-content" id="myTabContent">
-                    <div class="tab-pane fade show active" id="profile-tab-pane" role="tabpanel"
-                        aria-labelledby="profile-tab" tabindex="0">
+                    <div class="tab-pane fade show active" id="account-tab-pane" role="tabpanel" aria-labelledby="account-tab" tabindex="0">
+                        {{include "user/account.jet"}}
+                    </div>
+
+                    <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="1">
                         {{include "user/profile.jet" }}
                     </div>
 
-                    <div class="tab-pane fade" id="settings-tab-pane" role="tabpanel" aria-labelledby="settings-tab"
-                        tabindex="0">
+                    <div class="tab-pane fade" id="settings-tab-pane" role="tabpanel" aria-labelledby="settings-tab" tabindex="2">
                         {{include "user/settings.jet"}}
-                    </div>
-
-                    <div class="tab-pane fade" id="disabled-tab-pane" role="tabpanel" aria-labelledby="disabled-tab"
-                        tabindex="0">
-                        ...
                     </div>
                 </div>
             </div>

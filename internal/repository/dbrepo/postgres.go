@@ -189,11 +189,11 @@ func (m *postgresDbRepo) Authenticate(email, testPassword string) (models.User, 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	query := `select u.id, u.first_name, u.last_name, u.email, u.phone, u.access_level, u.created_at, u.updated_at, u.password, p.user_name, p.display_name, p.image_url, p.address, p.city, p.state, p.zipcode, s.show_online_status, s.show_email, s.show_phone, s.show_notifications from users u inner join profiles p on p.user_id = u.id inner join usersettings s on s.user_id = u.id where email = $1`
+	query := `select u.id, u.first_name, u.last_name, u.email, u.phone, u.access_level, u.created_at, u.updated_at, u.password, p.user_name, p.display_name, p.image_url, p.address, p.city, p.state, p.zipcode, s.show_online_status, s.show_email, s.show_phone, s.enable_sms_notifications, s.enable_email_notifications from users u inner join profiles p on p.user_id = u.id inner join usersettings s on s.user_id = u.id where email = $1`
 
 	row := m.DB.QueryRowContext(ctx, query, email)
 
-	err := row.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Email, &user.Phone, &user.AccessLevel, &user.CreatedAt, &user.UpdatedAt, &user.Password, &profile.UserName, &profile.DisplayName, &profile.ImageURL, &profile.Address, &profile.City, &profile.State, &profile.Zipcode, &userSettings.ShowOnlineStatus, &userSettings.ShowEmail, &userSettings.ShowPhone, &userSettings.ShowNotifications)
+	err := row.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Email, &user.Phone, &user.AccessLevel, &user.CreatedAt, &user.UpdatedAt, &user.Password, &profile.UserName, &profile.DisplayName, &profile.ImageURL, &profile.Address, &profile.City, &profile.State, &profile.Zipcode, &userSettings.ShowOnlineStatus, &userSettings.ShowEmail, &userSettings.ShowPhone, &userSettings.EnableSmsNotifications, &userSettings.EnableEmailNotifications)
 
 	if err != nil {
 		log.Printf("\n\tQuery error on table users\n\t%s\n", err.Error())
