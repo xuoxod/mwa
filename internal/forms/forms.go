@@ -70,6 +70,9 @@ func (f *Form) IsEmail(field string) {
 
 // IsEmail checks for valid email address
 func (f *Form) IsUrl(field string) {
+	if f.Get(field) == "" {
+		return
+	}
 	if !govalidator.IsURL(f.Get(field)) {
 		f.Errors.Add(field, "Malformed URL")
 	}
