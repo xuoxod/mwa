@@ -692,9 +692,6 @@
         };
 
         const handleFormError = data => {
-            const profileForm = data["profileform"];
-            const userForm = data["userform"];
-
             if (data["fname"]) {
                 const parentCount = countChildren(document.querySelector("#fname-group"));
 
