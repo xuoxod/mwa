@@ -1,7 +1,7 @@
 {{block documentBody()}}
 <div class="container-fluid justify-content-center rounded mt-2">
     <h3 class="text-center">
-        Account
+        You have no active services
     </h3>
 </div>
 {{end}}

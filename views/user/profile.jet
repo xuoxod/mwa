@@ -1,6 +1,6 @@
 {{block documentBody()}}
 <div class="container-fluid justify-content-center rounded mt-2">
-    <form id="profile-form mt-2">
+    <form id="profile-form">
         <input type="hidden" name="csrf_token" value="{{ .csrftoken }}" class="form-control">
 
         <div id="fname-group" class="input-group mb-3">
