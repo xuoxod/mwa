@@ -888,6 +888,7 @@
         const handleFormSuccess = data => {
             log(`User updated\n`);
 
+            // remove all error messages 
             if (document.querySelector("#fname-error")) {
                 document.querySelector("#fname-error").remove();
             }
@@ -927,6 +928,8 @@
             if (document.querySelector("#zipcode-error")) {
                 document.querySelector("#zipcode-error").remove();
             }
+
+
         };
 
 
