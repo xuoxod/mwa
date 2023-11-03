@@ -885,7 +885,7 @@
             }
         }
 
-        const handleFormSuccess = data => {
+        const handleFormSuccess = () => {
             log(`User updated\n`);
 
             // remove all error messages 
@@ -929,9 +929,9 @@
                 document.querySelector("#zipcode-error").remove();
             }
 
+            location.href = "/user";
 
         };
-
 
         const submitProfileForm = () => {
             const url = '/user/profile';
@@ -950,7 +950,7 @@
                         if (data["ok"] == false) {
                             handleFormError(data);
                         } else {
-                            handleFormSuccess(data);
+                            handleFormSuccess();
                         }
                     });
             } catch (err) {

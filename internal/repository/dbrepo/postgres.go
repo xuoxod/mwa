@@ -104,6 +104,80 @@ func (m *postgresDbRepo) UpdateUser(user models.User, profile models.Profile) (m
 	var u models.User
 	var p models.Profile
 
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	// Update user table
+	userQuery := `
+		update users set first_name = $1, last_name = $2, email = $3, phone = $4, updated_at = $5 where email = $6 returning id, first_name, last_name, email, phone, updated_at
+	`
+
+	usersRows, usersRowsErr := m.DB.QueryContext(ctx, userQuery,
+		user.FirstName,
+		user.LastName,
+		user.Email,
+		user.Phone,
+		time.Now(),
+		user.Email,
+	)
+
+	if usersRowsErr != nil {
+		return u, p, usersRowsErr
+	}
+
+	for usersRows.Next() {
+		if err := usersRows.Scan(&u.ID, &u.FirstName, &u.LastName, &u.Email, &u.Phone, &u.UpdatedAt); err != nil {
+			fmt.Printf("\tMember Row Scan Error: %s\n", err.Error())
+			return u, p, err
+		}
+	}
+
+	usersRerr := usersRows.Close()
+
+	if usersRerr != nil {
+		return u, p, usersRerr
+	}
+
+	if err := usersRows.Err(); err != nil {
+		return u, p, err
+	}
+
+	// Update profile table
+
+	profilesQuery := `
+	update profiles set user_name = $1, image_url = $2, address = $3, city = $4, state = $5, zipcode = $6, updated_at = $7 where user_id = $8 returning user_name, image_url, address, city, state, zipcode, updated_at`
+
+	profileRows, profileErr := m.DB.QueryContext(ctx, profilesQuery,
+		profile.UserName,
+		profile.ImageURL,
+		profile.Address,
+		profile.City,
+		profile.State,
+		profile.Zipcode,
+		time.Now(),
+		u.ID,
+	)
+
+	if profileErr != nil {
+		return u, p, profileErr
+	}
+
+	for profileRows.Next() {
+		if err := profileRows.Scan(&p.UserName, &p.ImageURL, &p.Address, &p.City, &p.State, &p.Zipcode, &p.UpdatedAt); err != nil {
+			return u, p, err
+		}
+	}
+
+	profileRerr := profileRows.Close()
+
+	if profileRerr != nil {
+		return u, p, profileRerr
+	}
+
+	if err := profileRows.Err(); err != nil {
+		return u, p, err
+	}
+
 	return u, p, nil
 }
 

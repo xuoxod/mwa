@@ -154,9 +154,19 @@ func (m *Respository) ProfilePost(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Response Writer's returned integer: %d\n", num)
 	} else {
 		// Update user and their profile then return it
+		updatedUser, updatedProfile, err := m.DB.UpdateUser(parsedUser, parsedProfile)
 
-		obj["user"] = parsedUser
-		obj["profile"] = parsedProfile
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		// replace user_id and profile in the session manager
+		m.App.Session.Remove(r.Context(), "user_id")
+		m.App.Session.Remove(r.Context(), "profile")
+
+		m.App.Session.Put(r.Context(), "user_id", updatedUser)
+		m.App.Session.Put(r.Context(), "profile", updatedProfile)
+
 		obj["ok"] = true
 
 		out, err := json.MarshalIndent(obj, "", " ")
