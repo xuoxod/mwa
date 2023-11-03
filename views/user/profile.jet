@@ -31,7 +31,7 @@
         <span class="input-group-text">
             <i class="bi bi-alphabet-uppercase fs-3 fw-bolder"></i>
         </span>
-        <input type="text" class="form-control" id="iurl" name="iurl"
+        <input type="url" class="form-control" id="iurl" name="iurl"
             value="{{if .profile.ImageURL != nil}}{{.profile.ImageURL}}{{else}}Enter url to your picture{{end}}"
             placeholder="Image URL" aria-label="iurl" aria-describedby="iurl" readonly>
     </div>
@@ -40,7 +40,7 @@
         <span class="input-group-text">
             <i class="bi bi-envelope-at-fill fs-3 fw-bolder"></i>
         </span>
-        <input type="text" class="form-control" id="email" name="email" value="{{.user.Email}}" placeholder="Email"
+        <input type="email" class="form-control" id="email" name="email" value="{{.user.Email}}" placeholder="Email"
             aria-label="email" aria-describedby="email" readonly>
     </div>
 
