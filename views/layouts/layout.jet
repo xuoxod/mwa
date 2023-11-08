@@ -41,13 +41,13 @@
     {{ if (isset(.auth)) == false }}
     {{include "partials/_unauthmenu.jet"}}
     {{end}}
-    <div class="container-fluid" style="margin:5% auto;">
+    <div class="container-fluid" style="margin:10px 5% 5% 5% auto;" style="height:70%;">
         {{block documentBody()}}{{end}}
     </div>
 
-    <div class="position-sticky mb-auto d-grid align-items-end fs-tiny justify-content-center">
-        &copy; {{copyright}}
-    </div>
+    <footer class="position-sticky mb-auto d-grid align-items-end fs-tiny justify-content-center">
+        Copyright &copy; {{copyright}}
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
@@ -647,7 +647,7 @@
     </script>
     {{end}}
 
-    {{ if (isset(dashboard))}}
+    {{ if (isset(settings))}}
     <script>
         // Profile tab 
         const profileSubmitButtonGroup = document.querySelector("#profile-submit-button-group");
@@ -930,7 +930,7 @@
                 document.querySelector("#zipcode-error").remove();
             }
 
-            location.href = "/user";
+            location.href = "/user/settings";
         };
 
         const submitProfileForm = () => {
@@ -1020,7 +1020,7 @@
         };
         const handleSettingsFormSuccess = () => {
             log(`Settings form submission succeeded\n`);
-            location.href = "/user";
+            location.href = "/user/settings";
         };
         const submitSettingsForm = () => {
             const url = '/user/settings';

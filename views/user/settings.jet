@@ -1,0 +1,61 @@
+{{extends "../layouts/layout.jet"}}
+{{block documentBody()}}
+ <div class="d-block text-center gap-auto rounded justify-content-center" style="margin: auto;">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-auto col-12">
+                    <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="account-tab" data-bs-toggle="tab"
+                                data-bs-target="#account-tab-pane" type="button" role="tab"
+                                aria-controls="account-tab-pane" aria-selected="false">Account</button>
+                        </li>
+
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="profile-tab" data-bs-toggle="tab"
+                                data-bs-target="#profile-tab-pane" type="button" role="tab"
+                                aria-controls="profile-tab-pane" aria-selected="false">Profile</button>
+                        </li>
+
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="settings-tab" data-bs-toggle="tab"
+                                data-bs-target="#settings-tab-pane" type="button" role="tab"
+                                aria-controls="settings-tab-pane" aria-selected="false">Preferences</button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="account-tab-pane" role="tabpanel"
+                            aria-labelledby="account-tab" tabindex="0">
+                            {{include "user/account.jet"}}
+                        </div>
+
+                        <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab"
+                            tabindex="1">
+                            {{include "user/profile.jet" }}
+                        </div>
+
+                        <div class="tab-pane fade" id="settings-tab-pane" role="tabpanel" aria-labelledby="settings-tab"
+                            tabindex="2">
+                            {{include "user/preferences.jet"}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-auto">
+                    <div class="container-fluid d-grid gap-3">
+                        <div class="col-md-4 col-sm-12">
+
+                        </div>
+
+                        <div class="col-md-4 col-sm-12"></div>
+
+                        <div class="col-md-4 col-sm-12"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{{end}}

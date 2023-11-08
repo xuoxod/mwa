@@ -18,6 +18,34 @@ import (
 // @access      Private
 func (m *Respository) UserDashboard(w http.ResponseWriter, r *http.Request) {
 	auth, authOk := m.App.Session.Get(r.Context(), "auth").(models.Authentication)
+
+	if !authOk {
+		log.Println("Cannot get auth data from session")
+		m.App.ErrorLog.Println("Can't get auth data from the session")
+		m.App.Session.Put(r.Context(), "error", "Can't get auth data from session")
+		http.Redirect(w, r, "/user", http.StatusTemporaryRedirect)
+		return
+	}
+
+	data := make(map[string]string)
+	data["dashboard"] = fmt.Sprintf("%t", true)
+
+	obj := make(map[string]interface{})
+	obj["auth"] = auth
+	obj["title"] = "Dashboard"
+
+	err := render.RenderPageWithContext(w, "user/dashboard.jet", data, obj)
+
+	if err != nil {
+		log.Println(err.Error())
+	}
+}
+
+// @desc        User dashboard
+// @route       GET /user
+// @access      Private
+func (m *Respository) Settings(w http.ResponseWriter, r *http.Request) {
+	auth, authOk := m.App.Session.Get(r.Context(), "auth").(models.Authentication)
 	profile, profileOk := m.App.Session.Get(r.Context(), "profile").(models.Profile)
 	preferences, preferencesOk := m.App.Session.Get(r.Context(), "preferences").(models.Preferences)
 	user, userOk := m.App.Session.Get(r.Context(), "user_id").(models.User)
@@ -55,7 +83,7 @@ func (m *Respository) UserDashboard(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := make(map[string]string)
-	data["dashboard"] = fmt.Sprintf("%t", true)
+	data["settings"] = fmt.Sprintf("%t", true)
 
 	obj := make(map[string]interface{})
 	obj["auth"] = auth
@@ -63,10 +91,10 @@ func (m *Respository) UserDashboard(w http.ResponseWriter, r *http.Request) {
 	obj["preferences"] = preferences
 	obj["user"] = user
 	obj["csrftoken"] = nosurf.Token(r)
-	obj["title"] = "Dashboard"
+	obj["title"] = "Settings"
 	obj["form"] = forms.New(nil)
 
-	err := render.RenderPageWithContext(w, "user/dashboard.jet", data, obj)
+	err := render.RenderPageWithContext(w, "user/settings.jet", data, obj)
 
 	if err != nil {
 		log.Println(err.Error())
