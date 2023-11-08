@@ -25,3 +25,17 @@
     max-height: 88%;
     overflow-y: scroll;
 }
+
+#settings-form-parent {
+    max-height: 70vh;
+}
+
+#profile-form-parent {
+    max-height: 70vh;
+}
+
+#settings-form-parent,
+#profile-form-parent {
+    height: max-content;
+    overflow-y: scroll;
+}

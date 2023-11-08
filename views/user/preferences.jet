@@ -1,0 +1,43 @@
+{{block documentBody()}}
+<div id="settings-form-parent" class="container-fluid justify-content-center rounded mt-2">
+    <form action="#" id="settings-form">
+        <div class="row d-grid gap-2">
+
+            <div class="input-group input-group-lg mb-4">
+                <div class="input-group-text">
+                    <input class="form-check-input mt-0" type="checkbox" {{if .preferences.EnableSmsNotifications}} checked
+                        {{end}} name="enable-sms-notifications" value=""
+                        aria-label="Checkbox for following text input">
+                </div>
+                <input type="text" class="form-control" aria-label="Text input with checkbox" readonly
+                    value="Enables SMS notifications">
+            </div>
+
+            <div class="input-group input-group-lg mb-4">
+                <div class="input-group-text">
+                    <input class="form-check-input mt-0" type="checkbox" {{if .preferences.EnableEmailNotifications}}
+                        checked {{end}} name="enable-email-notifications" value=""
+                        aria-label="Checkbox for following text input">
+                </div>
+                <input type="text" class="form-control" aria-label="Text input with checkbox" readonly
+                    value="Enables email notifications">
+            </div>
+
+            <div class="input-group input-group-lg mb-4">
+                <div class="input-group-text">
+                    <input class="form-check-input mt-0" type="checkbox" {{if .preferences.EnablePublicProfile}} checked
+                        {{end}} name="enable-public-profile" value="" aria-label="Checkbox for following text input">
+                </div>
+                <input type="text" class="form-control" aria-label="Text input with checkbox" readonly
+                    value="Make your profile public">
+            </div>
+
+            <div class="d-flex justify-content-between row">
+                <div id="settings-submit-button-group" class="m-0 d-grid justify-content-start">
+                    <button id="settings-submit-button" type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{{end}}

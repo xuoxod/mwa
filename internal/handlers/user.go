@@ -19,7 +19,7 @@ import (
 func (m *Respository) UserDashboard(w http.ResponseWriter, r *http.Request) {
 	auth, authOk := m.App.Session.Get(r.Context(), "auth").(models.Authentication)
 	profile, profileOk := m.App.Session.Get(r.Context(), "profile").(models.Profile)
-	settings, settingsOk := m.App.Session.Get(r.Context(), "settings").(models.UserSettings)
+	preferences, preferencesOk := m.App.Session.Get(r.Context(), "preferences").(models.Preferences)
 	user, userOk := m.App.Session.Get(r.Context(), "user_id").(models.User)
 
 	if !authOk {
@@ -38,10 +38,10 @@ func (m *Respository) UserDashboard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !settingsOk {
-		log.Println("Cannot get settings data from session")
-		m.App.ErrorLog.Println("Can't get settings data from the session")
-		m.App.Session.Put(r.Context(), "error", "Can't get settings data from session")
+	if !preferencesOk {
+		log.Println("Cannot get preferences data from session")
+		m.App.ErrorLog.Println("Can't get preferences data from the session")
+		m.App.Session.Put(r.Context(), "error", "Can't get preferences data from session")
 		http.Redirect(w, r, "/user", http.StatusTemporaryRedirect)
 		return
 	}
@@ -60,7 +60,7 @@ func (m *Respository) UserDashboard(w http.ResponseWriter, r *http.Request) {
 	obj := make(map[string]interface{})
 	obj["auth"] = auth
 	obj["profile"] = profile
-	obj["settings"] = settings
+	obj["preferences"] = preferences
 	obj["user"] = user
 	obj["csrftoken"] = nosurf.Token(r)
 	obj["title"] = "Dashboard"
@@ -89,7 +89,6 @@ func (m *Respository) ProfilePost(w http.ResponseWriter, r *http.Request) {
 
 	parsedProfile := models.Profile{
 		UserName: r.Form.Get("uname"),
-		ImageURL: r.Form.Get("iurl"),
 		Address:  r.Form.Get("address"),
 		City:     r.Form.Get("city"),
 		State:    r.Form.Get("state"),
@@ -184,6 +183,96 @@ func (m *Respository) ProfilePost(w http.ResponseWriter, r *http.Request) {
 		}
 
 		log.Printf("Response Writer's returned integer: %d\n", num)
+	}
+}
+
+// @desc        Update settings
+// @route       POST /user/settings
+// @access      Private
+func (m *Respository) PreferencesPost(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Post settings")
+	obj := make(map[string]interface{})
+	preferences, preferencesOk := m.App.Session.Get(r.Context(), "preferences").(models.Preferences)
+
+	if !preferencesOk {
+		log.Println("Cannot get preferences data from session")
+		m.App.ErrorLog.Println("Can't get preferences data from the session")
+		m.App.Session.Put(r.Context(), "error", "Can't get preferences data from session")
+		http.Redirect(w, r, "/user", http.StatusTemporaryRedirect)
+		return
+	}
+
+	err := r.ParseForm()
+
+	if err != nil {
+		fmt.Printf("\n\tError parsing user preferences form")
+		helpers.ServerError(w, err)
+		return
+	}
+
+	var parsedPreferences models.Preferences
+
+	parsedPreferences.ID = preferences.ID
+	parsedPreferences.UserID = preferences.UserID
+
+	for key := range r.Form {
+		if key == "enable-public-profile" {
+			parsedPreferences.EnablePublicProfile = true
+		}
+
+		if key == "enable-sms-notifications" {
+			parsedPreferences.EnableSmsNotifications = true
+		}
+
+		if key == "enable-email-notifications" {
+			parsedPreferences.EnableEmailNotifications = true
+		}
+
+	}
+
+	log.Printf("\n\tParsed Settings Form: \n\t%v\n\n", parsedPreferences)
+
+	// Update user and their profile then return it
+	updatedPreferences, err := m.DB.UpdatePreferences(parsedPreferences)
+
+	if err != nil {
+		fmt.Println(err)
+
+		obj["ok"] = false
+
+		out, err := json.MarshalIndent(obj, "", " ")
+
+		if err != nil {
+			log.Println(err)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(200)
+		_, rErr := w.Write(out)
+
+		if rErr != nil {
+			log.Println(err)
+		}
+		return
+	}
+
+	m.App.Session.Remove(r.Context(), "preferences")
+	m.App.Session.Put(r.Context(), "preferences", updatedPreferences)
+
+	obj["ok"] = true
+
+	out, err := json.MarshalIndent(obj, "", " ")
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, rErr := w.Write(out)
+
+	if rErr != nil {
+		log.Println(err)
 	}
 }
 

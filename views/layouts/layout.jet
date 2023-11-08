@@ -649,21 +649,22 @@
 
     {{ if (isset(dashboard))}}
     <script>
+        // Profile tab 
         const profileSubmitButtonGroup = document.querySelector("#profile-submit-button-group");
         const profileEditButtonGroup = document.querySelector("#profile-edit-button-group");
         const profileSubmitButton = document.querySelector("#profile-submit-button");
         const profileEditButton = document.querySelector("#profile-edit-button");
-        const inputs = document.querySelectorAll(".form-control");
         const profileForm = document.querySelector("#profile-form");
+        const inputs = document.querySelectorAll(".form-control");
         const fnameGroup = document.querySelector("#fname-group");
         const lnameGroup = document.querySelector("#lname-group");
         const unameGroup = document.querySelector("#uname-group");
+        const addressGroup = document.querySelector("#address");
+        const zipcodeGroup = document.querySelector("#zipcode");
         const emailGroup = document.querySelector("#email");
         const phoneGroup = document.querySelector("#phone");
-        const addressGroup = document.querySelector("#address");
-        const cityGroup = document.querySelector("#city");
         const stateGroup = document.querySelector("#state");
-        const zipcodeGroup = document.querySelector("#zipcode");
+        const cityGroup = document.querySelector("#city");
         let toggler = false;
         const objInputs = {};
         const changedInputs = {};
@@ -930,7 +931,6 @@
             }
 
             location.href = "/user";
-
         };
 
         const submitProfileForm = () => {
@@ -1012,22 +1012,53 @@
                 }
             });
         });
+
+        // Settings tab 
+        const settingsForm = document.querySelector("#settings-form");
+        const handleSettingsFormError = () => {
+            log(`Settings form submission failed\n`);
+        };
+        const handleSettingsFormSuccess = () => {
+            log(`Settings form submission succeeded\n`);
+            location.href = "/user";
+        };
+        const submitSettingsForm = () => {
+            const url = '/user/settings';
+            const formData = new FormData(settingsForm);
+            formData.append("csrf_token", "{{.csrftoken}}");
+            log(`Sending form data: ${stringify(formData)}\n`);
+            try {
+                fetch("/user/settings", {
+                    method: "post",
+                    body: formData,
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data["ok"] == false) {
+                            handleSettingsFormError(data);
+                        } else {
+                            handleSettingsFormSuccess();
+                        }
+                    });
+            } catch (err) {
+                log(err);
+            }
+        };
+
+        settingsForm.addEventListener("submit", e => {
+            e.preventDefault();
+            log(`Settings form submitted\n`);
+            try {
+                submitSettingsForm();
+            } catch (err) {
+                log(err);
+            }
+            return;
+        });
+
     </script>
     {{end}}
 
-    {{if (isset(settings))}}
-    <script>
-        const settingsForm = document.querySelector("#setings-form");
-        const showOnlineStatus = document.querySelector("#show-online-status");
-        const showProfile = document.querySelector("#show-profile");
-        const showAddress = document.querySelector("#show-address");
-        const showCity = document.querySelector("#show-city");
-        const showState = document.querySelector("#show-state");
-        const showZipcode = document.querySelector("#show-zipcode");
-        const receiveEmailNotifications = document.querySelector("#receive-email-notifications");
-        const receiveSmsNotifications = document.querySelector("#received-sms-notifications");
-    </script>
-    {{end}}
 </body>
 
 </html>

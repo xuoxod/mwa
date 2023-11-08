@@ -1,6 +1,8 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 // User registration data
 type Registration struct {
@@ -29,45 +31,42 @@ type Users struct {
 
 // User
 type User struct {
-	ID          string
-	FirstName   string
-	LastName    string
-	Email       string
-	Phone       string
-	Password    string
-	AccessLevel int
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	ID            string
+	FirstName     string
+	LastName      string
+	Email         string
+	Phone         string
+	Password      string
+	EmailVerified bool
+	PhoneVerified bool
+	AccessLevel   int
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
 }
 
 // User profile
 type Profile struct {
-	ID          int
-	UserID      int
-	UserName    string
-	DisplayName string
-	ImageURL    string
-	Address     string
-	City        string
-	State       string
-	Zipcode     string
-	UpdatedAt   time.Time
-	CreatedAt   time.Time
+	ID        int
+	UserID    int
+	UserName  string
+	Image     byte
+	Address   string
+	City      string
+	State     string
+	Zipcode   string
+	UpdatedAt time.Time
+	CreatedAt time.Time
 }
 
-// User settings
-type UserSettings struct {
+// User preferences
+type Preferences struct {
 	ID                       int
 	UserID                   int
-	ShowOnlineStatus         bool
-	ShowPhone                bool
-	ShowEmail                bool
+	EnablePublicProfile      bool
 	EnableSmsNotifications   bool
 	EnableEmailNotifications bool
-	ShowAddress              bool
-	ShowCity                 bool
-	ShowState                bool
-	ShowZipcode              bool
+	UpdatedAt                time.Time
+	CreatedAt                time.Time
 }
 
 // Auth variable

@@ -82,7 +82,7 @@ func (m *Respository) Register(w http.ResponseWriter, r *http.Request) {
 	regData, regDataOk := m.App.Session.Get(r.Context(), "reg-error").(models.RegistrationErrData)
 
 	if !regDataOk {
-		log.Println("Cannot get reg-error data from session")
+		log.Println("Cannot get reg-error data from session but that's Alright!!")
 	}
 
 	var emptyRegistrationForm models.Registration
@@ -154,6 +154,8 @@ func (m *Respository) PostRegister(w http.ResponseWriter, r *http.Request) {
 			log.Println(err.Error())
 		}
 	} else {
+		// Send user sms to confirm that it's them
+
 		// Create new user in the database
 		// ERROR: duplicate key value violates unique constraint "users_un" (SQLSTATE 23505)
 		userId, err := m.DB.CreateUser(registration)
@@ -263,16 +265,16 @@ func (m *Respository) PostSignin(w http.ResponseWriter, r *http.Request) {
 
 	var user models.User
 	var profile models.Profile
-	var settings models.UserSettings
+	var preferences models.Preferences
 
 	user = u
 	profile = p
-	settings = s
+	preferences = s
 
 	// Put user in session
 	m.App.Session.Put(r.Context(), "user_id", user)
 	m.App.Session.Put(r.Context(), "profile", profile)
-	m.App.Session.Put(r.Context(), "settings", settings)
+	m.App.Session.Put(r.Context(), "preferences", preferences)
 
 	if user.AccessLevel == 1 {
 		m.App.Session.Put(r.Context(), "admin_id", user)

@@ -2,7 +2,6 @@ package dbrepo
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log"
 	"time"
@@ -22,15 +21,16 @@ func (m *postgresDbRepo) CreateUser(user models.Registration) (int, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	var id, pId, sId int
+	var userId, profileId, prefId int
 
+	// Insert user
 	stmt := `insert into krxbyhhs.public.users(first_name, last_name, email, phone, password, created_at, updated_at) values($1,$2,$3,$4,$5,$6,$7) returning id`
 
 	hashedPassword, hashPasswordErr := helpers.HashPassword(user.PasswordConfirm)
 
 	if hashPasswordErr != nil {
-		fmt.Println("Error hashing password: ", errors.New(hashPasswordErr.Error()))
-		return 0, errors.New(hashPasswordErr.Error())
+		fmt.Println("Error hashing password: ", hashPasswordErr.Error())
+		return 0, hashPasswordErr
 	}
 
 	row := m.DB.QueryRowContext(ctx, stmt,
@@ -43,40 +43,42 @@ func (m *postgresDbRepo) CreateUser(user models.Registration) (int, error) {
 		time.Now(),
 	)
 
-	memberErr := row.Scan(&id)
+	rowErr := row.Scan(&userId)
 
-	if memberErr != nil {
-		// fmt.Println("User Error: ", errors.New(memberErr.Error()))
-		return 0, errors.New(memberErr.Error())
+	if rowErr != nil {
+		fmt.Println("User Error: ", rowErr.Error())
+		return 0, rowErr
 	}
+
+	// Insert profile
 
 	// Create unique username
-
 	username := fmt.Sprintf("%s-%s", user.LastName, user.Email)
 
-	stmt = `insert into krxbyhhs.public.profiles(user_id, created_at, updated_at, user_name, display_name, image_url, address, city, state, zipcode) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) returning user_id`
+	stmt = `insert into krxbyhhs.public.profiles(user_id, created_at, updated_at, user_name, address, city, state, zipcode) values($1,$2,$3,$4,$5,$6,$7,$8) returning id`
 
-	row = m.DB.QueryRowContext(ctx, stmt, id, time.Now(), time.Now(), username, "display-name", "image-url", "address", "city", "state", "zipcode")
+	row = m.DB.QueryRowContext(ctx, stmt, userId, time.Now(), time.Now(), username, "Enter address", "Enter city", "Enter state", "Enter zipcode")
 
-	memberErr = row.Scan(&pId)
+	rowErr = row.Scan(&profileId)
 
-	if memberErr != nil {
-		// fmt.Println("Profile Error: ", errors.New(memberErr.Error()))
-		return 0, errors.New(memberErr.Error())
+	if rowErr != nil {
+		fmt.Println("Profile Error: ", rowErr.Error())
+		return 0, rowErr
 	}
 
-	stmt = `insert into krxbyhhs.public.usersettings(user_id, created_at, updated_at) values($1,$2,$3) returning user_id`
+	// Insert preferences
+	stmt = `insert into krxbyhhs.public.preferences(user_id, created_at, updated_at) values($1,$2,$3) returning id`
 
-	row = m.DB.QueryRowContext(ctx, stmt, id, time.Now(), time.Now())
+	row = m.DB.QueryRowContext(ctx, stmt, userId, time.Now(), time.Now())
 
-	memberErr = row.Scan(&sId)
+	rowErr = row.Scan(&prefId)
 
-	if memberErr != nil {
-		// fmt.Println("Profile Error: ", errors.New(memberErr.Error()))
-		return 0, errors.New(memberErr.Error())
+	if rowErr != nil {
+		fmt.Println("Preferences Error: ", rowErr.Error())
+		return 0, rowErr
 	}
 
-	return id, nil
+	return userId, nil
 }
 
 func (m *postgresDbRepo) RemoveUser(id int) error {
@@ -94,6 +96,59 @@ func (m *postgresDbRepo) GetUserByEmail(email string) (models.User, error) {
 	var user models.User
 
 	return user, nil
+}
+
+// UpdateSettings: update the user settings
+// @param models.User: first & last names, email, phone
+// @param models.Profile: username, image url, address, city, state, zipcode
+// @return models.User, models.Profile and error
+func (m *postgresDbRepo) UpdatePreferences(preferences models.Preferences) (models.Preferences, error) {
+	var p models.Preferences
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	// Update user table
+	preferencesQuery := `
+		update preferences set enable_sms_notifications = $1, enable_email_notifications = $2, enable_public_profile = $3, updated_at = $4 where user_id = $5 returning id, user_id, enable_sms_notifications, enable_email_notifications, enable_public_profile, updated_at
+	`
+
+	preferencesRows, preferencesRowsErr := m.DB.QueryContext(ctx, preferencesQuery,
+		preferences.EnableSmsNotifications,
+		preferences.EnableEmailNotifications,
+		preferences.EnablePublicProfile,
+		time.Now(),
+		preferences.UserID,
+	)
+
+	if preferencesRowsErr != nil {
+		log.Println("preferences row err: ", preferencesRowsErr)
+		return p, preferencesRowsErr
+	}
+
+	for preferencesRows.Next() {
+		if err := preferencesRows.Scan(&p.ID, &p.UserID, &p.EnableSmsNotifications, &p.EnableEmailNotifications, &p.EnablePublicProfile, &p.UpdatedAt); err != nil {
+			log.Println("preferences rows scan err ", err)
+			return p, err
+		}
+	}
+
+	preferencesRerr := preferencesRows.Close()
+
+	if preferencesRerr != nil {
+		log.Println("preferences rerr err: ", preferencesRerr)
+		return p, preferencesRerr
+	}
+
+	if err := preferencesRows.Err(); err != nil {
+		log.Println("preferences row err(): ", err)
+		return p, err
+	}
+
+	log.Println("Returning updated user preferences")
+	log.Printf("\tPreferences:\n\t%v\n\n", p)
+
+	return p, nil
 }
 
 // UpdateUser: update the user and profile
@@ -145,11 +200,10 @@ func (m *postgresDbRepo) UpdateUser(user models.User, profile models.Profile) (m
 	// Update profile table
 
 	profilesQuery := `
-	update profiles set user_name = $1, image_url = $2, address = $3, city = $4, state = $5, zipcode = $6, updated_at = $7 where user_id = $8 returning user_name, image_url, address, city, state, zipcode, updated_at`
+	update profiles set user_name = $1, address = $2, city = $3, state = $4, zipcode = $5, updated_at = $6 where user_id = $7 returning user_name, address, city, state, zipcode, updated_at`
 
 	profileRows, profileErr := m.DB.QueryContext(ctx, profilesQuery,
 		profile.UserName,
-		profile.ImageURL,
 		profile.Address,
 		profile.City,
 		profile.State,
@@ -163,7 +217,7 @@ func (m *postgresDbRepo) UpdateUser(user models.User, profile models.Profile) (m
 	}
 
 	for profileRows.Next() {
-		if err := profileRows.Scan(&p.UserName, &p.ImageURL, &p.Address, &p.City, &p.State, &p.Zipcode, &p.UpdatedAt); err != nil {
+		if err := profileRows.Scan(&p.UserName, &p.Address, &p.City, &p.State, &p.Zipcode, &p.UpdatedAt); err != nil {
 			return u, p, err
 		}
 	}
@@ -181,36 +235,36 @@ func (m *postgresDbRepo) UpdateUser(user models.User, profile models.Profile) (m
 	return u, p, nil
 }
 
-func (m *postgresDbRepo) Authenticate(email, testPassword string) (models.User, models.Profile, models.UserSettings, error) {
+func (m *postgresDbRepo) Authenticate(email, testPassword string) (models.User, models.Profile, models.Preferences, error) {
 	var user models.User
 	var profile models.Profile
-	var userSettings models.UserSettings
+	var preferences models.Preferences
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	query := `select u.id, u.first_name, u.last_name, u.email, u.phone, u.access_level, u.created_at, u.updated_at, u.password, p.user_name, p.display_name, p.image_url, p.address, p.city, p.state, p.zipcode, s.show_online_status, s.show_email, s.show_phone, s.enable_sms_notifications, s.enable_email_notifications from users u inner join profiles p on p.user_id = u.id inner join usersettings s on s.user_id = u.id where email = $1`
+	query := `select u.id, u.first_name, u.last_name, u.email, u.phone, u.access_level, u.created_at, u.updated_at, u.password, u.email_verified, u.phone_verified, p.user_name, p.address, p.city, p.state, p.zipcode, s.id, s.user_id, s.enable_sms_nots, s.enable_email_nots, s.enable_public_profile from users u inner join profiles p on p.user_id = u.id inner join preferences s on s.user_id = u.id where email = $1`
 
 	row := m.DB.QueryRowContext(ctx, query, email)
 
-	err := row.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Email, &user.Phone, &user.AccessLevel, &user.CreatedAt, &user.UpdatedAt, &user.Password, &profile.UserName, &profile.DisplayName, &profile.ImageURL, &profile.Address, &profile.City, &profile.State, &profile.Zipcode, &userSettings.ShowOnlineStatus, &userSettings.ShowEmail, &userSettings.ShowPhone, &userSettings.EnableSmsNotifications, &userSettings.EnableEmailNotifications)
+	err := row.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Email, &user.Phone, &user.AccessLevel, &user.CreatedAt, &user.UpdatedAt, &user.Password, &user.EmailVerified, &user.PhoneVerified, &profile.UserName, &profile.Address, &profile.City, &profile.State, &profile.Zipcode, &preferences.ID, &preferences.UserID, &preferences.EnableSmsNotifications, &preferences.EnableEmailNotifications, &preferences.EnablePublicProfile)
 
 	if err != nil {
 		log.Printf("\n\tQuery error on table users\n\t%s\n", err.Error())
-		return user, profile, userSettings, err
+		return user, profile, preferences, err
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(testPassword))
 
 	if err == bcrypt.ErrMismatchedHashAndPassword {
-		log.Println("bcrypt error:\t", err.Error())
+		log.Println("bcrypt mismatched error:\t", err.Error())
 
-		return user, profile, userSettings, err
+		return user, profile, preferences, err
 	} else if err != nil {
 		log.Println("bcrypt error:\t", err.Error())
 
-		return user, profile, userSettings, err
+		return user, profile, preferences, err
 	}
 
-	return user, profile, userSettings, nil
+	return user, profile, preferences, nil
 }

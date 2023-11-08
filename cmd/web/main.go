@@ -59,7 +59,7 @@ func run() (*driver.DB, error) {
 
 	// Store a value in session
 	gob.Register(models.Profile{})
-	gob.Register(models.UserSettings{})
+	gob.Register(models.Preferences{})
 	gob.Register(models.Users{})
 	gob.Register(models.User{})
 	gob.Register(models.Signin{})

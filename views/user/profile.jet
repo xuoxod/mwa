@@ -1,5 +1,5 @@
 {{block documentBody()}}
-<div class="container-fluid justify-content-center rounded mt-2">
+<div id="profile-form-parent" class="container-fluid justify-content-center rounded mt-2">
     <form id="profile-form">
         <input type="hidden" name="csrf_token" value="{{ .csrftoken }}" class="form-control">
 
@@ -26,15 +26,6 @@
             <input type="text" class="form-control" id="uname" name="uname"
                 value="{{if .profile.UserName != nil}}{{.profile.UserName}}{{else}}Create a username{{end}}"
                 placeholder=" User name" aria-label="uname" aria-describedby="uname" readonly>
-        </div>
-
-        <div id="iurl-group" class="input-group mb-3">
-            <span class="input-group-text">
-                <i class="bi bi-alphabet-uppercase fs-3 fw-bolder"></i>
-            </span>
-            <input type="url" class="form-control" id="iurl" name="iurl"
-                value="{{if .profile.ImageURL != nil}}{{.profile.ImageURL}}{{else}}Enter url to your picture{{end}}"
-                placeholder="Image URL" aria-label="iurl" aria-describedby="iurl" readonly>
         </div>
 
         <div id="email-group" class="input-group mb-3">

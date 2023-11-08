@@ -33,6 +33,7 @@ func routes() http.Handler {
 		mux.Get("/", handlers.Repo.UserDashboard)
 		mux.Get("/signout", handlers.Repo.SignOut)
 		mux.Post("/profile", handlers.Repo.ProfilePost)
+		mux.Post("/settings", handlers.Repo.PreferencesPost)
 	})
 
 	mux.Route("/public", func(mux chi.Router) {

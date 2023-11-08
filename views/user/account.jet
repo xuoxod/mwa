@@ -3,5 +3,25 @@
     <h3 class="text-center">
         You have no active services
     </h3>
+
+    {{if !.user.EmailVerified}}
+    <div class="row">
+        <div class="col-auto">
+            <p>
+                Email not verified
+            </p>
+        </div>
+    </div>
+    {{end}}
+
+    {{if !.user.PhoneVerified}}
+    <div class="row">
+        <div class="col-auto">
+            <p>
+                Phone not verified
+            </p>
+        </div>
+    </div>
+    {{end}}
 </div>
 {{end}}
