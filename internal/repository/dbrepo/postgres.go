@@ -110,7 +110,7 @@ func (m *postgresDbRepo) UpdatePreferences(preferences models.Preferences) (mode
 
 	// Update user table
 	preferencesQuery := `
-		update preferences set enable_sms_notifications = $1, enable_email_notifications = $2, enable_public_profile = $3, updated_at = $4 where user_id = $5 returning id, user_id, enable_sms_notifications, enable_email_notifications, enable_public_profile, updated_at
+		update preferences set enable_sms_nots = $1, enable_email_nots = $2, enable_public_profile = $3, updated_at = $4 where user_id = $5 returning id, user_id, enable_sms_nots, enable_email_nots, enable_public_profile, updated_at
 	`
 
 	preferencesRows, preferencesRowsErr := m.DB.QueryContext(ctx, preferencesQuery,
