@@ -5,6 +5,10 @@ const verifyPhoneInput = document.querySelector("#verify-phone-input");
 const verifyPhoneLabel = document.querySelector("#verify-phone-label");
 const phoneLabelIcon = document.querySelector("#phone-label-icon");
 
+const sendPhoneVerification = () => {
+  log(`Sending phone verification code\n`);
+};
+
 const verifyPhoneButtonHandler = () => {
   phoneLabelIcon.remove();
 
@@ -53,6 +57,7 @@ function phoneVerificationResponse(response) {
     verifyPhoneButton.classList.add("btn-success");
     verifyPhoneButton.innerText = "Submit";
     verifyPhoneButton.removeEventListener("click", verifyPhoneButtonHandler);
+    verifyPhoneButton.addEventListener("click", sendPhoneVerification);
 
     if (countChildren(verifyPhoneLabel) > 0) {
       removeChildren(verifyPhoneLabel);
@@ -70,6 +75,10 @@ const verifyEmailButton = document.querySelector("#verify-email-button");
 const verifyEmailInput = document.querySelector("#verify-email-input");
 const verifyEmailLabel = document.querySelector("#verify-email-label");
 const emailLabelIcon = document.querySelector("#email-label-icon");
+
+const sendEmailVerification = () => {
+  log(`Sending email verification code\n`);
+};
 
 const verifyEmailButtonHandler = () => {
   emailLabelIcon.remove();
@@ -119,6 +128,7 @@ function emailVerificationResponse(response) {
     verifyEmailButton.classList.add("btn-success");
     verifyEmailButton.innerText = "Submit";
     verifyEmailButton.removeEventListener("click", verifyEmailButtonHandler);
+    verifyEmailButton.addEventListener("click", sendEmailVerification);
 
     if (countChildren(verifyEmailLabel) > 0) {
       removeChildren(verifyEmailLabel);
