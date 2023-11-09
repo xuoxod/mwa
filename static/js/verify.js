@@ -66,6 +66,17 @@ function phoneVerificationResponse(response) {
     appendChild(verifyPhoneLabel, phoneIcon);
   } else {
     log(`Phone verification failed\n`);
+
+    const p = document.querySelector("#p-phone");
+
+    if (countChildren(verifyPhoneLabel) > 0) {
+      removeChildren(verifyPhoneLabel);
+    }
+
+    appendChild(verifyPhoneLabel, p);
+    document.querySelector("#p-phone").classList.remove("text-success");
+    document.querySelector("#p-phone").classList.add("text-danger");
+    document.querySelector("#p-phone").innerText = `Phone verification failed`;
   }
 }
 
@@ -137,6 +148,17 @@ function emailVerificationResponse(response) {
     appendChild(verifyEmailLabel, emailIcon);
   } else {
     log(`Email verification failed\n`);
+
+    const p = document.querySelector("#p-email");
+
+    if (countChildren(verifyEmailLabel) > 0) {
+      removeChildren(verifyEmailLabel);
+    }
+
+    appendChild(verifyEmailLabel, p);
+    document.querySelector("#p-email").classList.remove("text-success");
+    document.querySelector("#p-email").classList.add("text-danger");
+    document.querySelector("#p-email").innerText = `Email verification failed`;
   }
 }
 
