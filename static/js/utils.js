@@ -1,5 +1,9 @@
 const log = (msg) => console.log(msg);
 
+const stringify = (obj) => JSON.stringify(obj);
+
+const parser = (strObj) => JSON.parse(strObj);
+
 const addHandler = (theElement, whichEvent, method) => {
   if (null != theElement && null != whichEvent && typeof method == "function") {
     theElement.addEventListener(whichEvent, method);
@@ -177,23 +181,35 @@ const newElement = (type) => {
   return null;
 };
 
-const error = (msg) => {
+// notify display a custom alert to user
+// type string: success, error or warning
+// msg string: message to user
+const notify = (type, msg) => {
   notie.alert({
-    type: "error",
+    type: type,
     text: msg,
   });
 };
 
-const success = (msg) => {
-  notie.alert({
-    type: "success",
-    text: msg,
-  });
-};
-
-const warning = (msg) => {
-  notie.alert({
-    type: "warning",
-    text: msg,
+// modal display custom modal
+// title string: modal's title
+// text string: the message to user
+// icon built-in: success, warning, error, info or question
+// btnText string: button's text
+const modal = (
+  title,
+  text,
+  icon,
+  btnText = "Okay",
+  btnClose = true,
+  showStatus = true
+) => {
+  Swal.fire({
+    title: title,
+    text: text,
+    icon: icon,
+    confirmButtonText: btnText,
+    showCloseButton: btnClose,
+    showLoading: showStatus,
   });
 };

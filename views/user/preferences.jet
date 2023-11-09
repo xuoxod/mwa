@@ -10,7 +10,7 @@
                         aria-label="Checkbox for following text input">
                 </div>
                 <input type="text" class="form-control" aria-label="Text input with checkbox" readonly
-                    value="Enables SMS notifications">
+                    value="Enable SMS notifications">
             </div>
 
             <div class="input-group input-group-lg mb-4">
@@ -20,7 +20,7 @@
                         aria-label="Checkbox for following text input">
                 </div>
                 <input type="text" class="form-control" aria-label="Text input with checkbox" readonly
-                    value="Enables email notifications">
+                    value="Enable email notifications">
             </div>
 
             <div class="input-group input-group-lg mb-4">

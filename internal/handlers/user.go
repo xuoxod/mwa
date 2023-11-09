@@ -41,8 +41,8 @@ func (m *Respository) UserDashboard(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// @desc        User dashboard
-// @route       GET /user
+// @desc        User settings
+// @route       GET /user/settings
 // @access      Private
 func (m *Respository) Settings(w http.ResponseWriter, r *http.Request) {
 	auth, authOk := m.App.Session.Get(r.Context(), "auth").(models.Authentication)
@@ -312,4 +312,53 @@ func (m *Respository) SignOut(w http.ResponseWriter, r *http.Request) {
 	_ = m.App.Session.RenewToken(r.Context())
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+// @desc        Verify Email
+// @route       GET /user/email/verify
+// @access      Private
+func (m *Respository) VerifyEmail(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Get verify email")
+
+	obj := make(map[string]interface{})
+	obj["ok"] = true
+
+	out, err := json.MarshalIndent(obj, "", " ")
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, rErr := w.Write(out)
+
+	if rErr != nil {
+		log.Println(err)
+	}
+
+}
+
+// @desc        Verify Phone
+// @route       GET /user/phone/verify
+// @access      Private
+func (m *Respository) VerifyPhone(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Get verify phone")
+
+	obj := make(map[string]interface{})
+	obj["ok"] = true
+
+	out, err := json.MarshalIndent(obj, "", " ")
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, rErr := w.Write(out)
+
+	if rErr != nil {
+		log.Println(err)
+	}
 }

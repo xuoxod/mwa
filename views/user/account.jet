@@ -1,27 +1,55 @@
 {{block documentBody()}}
-<div class="container-fluid justify-content-center rounded mt-2">
-    <h3 class="text-center">
-        You have no active services
-    </h3>
+<div class="container-fluid px-5 py-5 bg-light">
+    <div class="row align-items-start gap-3">
+        {{if !.user.PhoneVerified}}
+        <div class="col-12 justify-content-start">
+            <form id="verify-phone-form" class="d-block">
+                <input type="hidden" name="csrf_token" class="form-control" value="{{.csrftoken}}">
+                <div class="input-group mb-2">
+                    <span id="verify-phone-label" class="input-group-text fw-bold bg-transparent">
+                        <i id="phone-label-icon" class="bi bi-telephone-fill text-danger fs-3"></i>
+                    </span>
 
-    {{if !.user.EmailVerified}}
-    <div class="row">
-        <div class="col-auto">
-            <p class="text-danger fw-bold">
-                Email not verified
+                    <input id="verify-phone-input" name="phone" type="text" class="form-control d-none"> <span
+                        id="verify-phone-label" class="input-group-text fw-bold bg-transparent">
+                        <button id="verify-phone-button" type="button" class="btn btn-danger fw-bold">
+                            Verify Phone
+                        </button>
+                    </span>
+                </div>
+            </form>
+        </div>
+        {{end}}
+
+        {{if !.user.EmailVerified}}
+        <div class="col-12">
+            <form id="verify-email-form">
+                <input type="hidden" name="csrf_token" class="form-control" value="{{.csrftoken}}">
+                <div class="input-group mb-2">
+                    <span id="verify-email-label" class="input-group-text fw-bold bg-transparent">
+                        <i id="email-label-icon" class="bi bi-envelope-at-fill text-danger fs-3"></i>
+                    </span>
+
+                    <input id="verify-email-input" name="email" type="text" class="form-control d-none">
+                    <span id="verify-email-label" class="input-group-text fw-bold bg-transparent">
+                        <button id="verify-email-button" type="button" class="btn btn-danger fw-bold">
+                            Verify Email
+                        </button>
+                    </span>
+                </div>
+            </form>
+        </div>
+        {{end}}
+
+        {{if .user.EmailVerified && .user.PhoneVerified}}
+        <div class="col-12">
+            <p>
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Corporis tenetur fuga magni aliquam molestias
+                quam quas perspiciatis, minus veritatis veniam debitis aut. Id ullam quisquam natus, rerum aut officia
+                voluptatibus.
             </p>
         </div>
+        {{end}}
     </div>
-    {{end}}
-
-    {{if !.user.PhoneVerified}}
-    <div class="row">
-        <div class="col-auto">
-            <p class="text-danger fw-bold">
-                Phone not verified
-            </p>
-        </div>
-    </div>
-    {{end}}
 </div>
 {{end}}

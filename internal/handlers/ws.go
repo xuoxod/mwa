@@ -22,6 +22,20 @@ var upgradeConnection = websocket.Upgrader{
 	},
 }
 
+func reader(conn *websocket.Conn) {
+	for {
+		messageType, p, err := conn.ReadMessage()
+
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		log.Println(string(p))
+		log.Printf("Message Type:\t%d\n\n", messageType)
+	}
+}
+
 type Client struct {
 	ID               string
 	Username         string
@@ -76,8 +90,6 @@ type WsPayload struct {
 
 func (m *Respository) WsEndpoint(w http.ResponseWriter, r *http.Request) {
 	ws, err := upgradeConnection.Upgrade(w, r, nil)
-
-	println("Client connected to endpoint")
 
 	if err != nil {
 		log.Printf("Endpoint Error:\t%s", err.Error())
