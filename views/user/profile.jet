@@ -1,5 +1,5 @@
 {{block documentBody()}}
-<div id="profile-form-parent" class="container-fluid justify-content-center rounded mt-2">
+<div id="profile-form-parent" class="container-fluid px-5 py-5 bg-light rounded">
     <form id="profile-form">
         <input type="hidden" name="csrf_token" value="{{ .csrftoken }}" class="form-control">
 

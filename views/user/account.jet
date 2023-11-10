@@ -1,5 +1,5 @@
 {{block documentBody()}}
-<div class="container-fluid px-5 py-5 bg-light">
+<div class="container-fluid px-5 py-5 bg-light rounded">
     <div class="row align-items-center justify-content-evenly">
         {{if !.user.PhoneVerified == true}}
         <div class="col-12 justify-content-start">

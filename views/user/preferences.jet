@@ -1,5 +1,5 @@
 {{block documentBody()}}
-<div id="settings-form-parent" class="container-fluid justify-content-center rounded mt-2">
+<div id="settings-form-parent" class="container-fluid px-5 py-5 bg-light rounded">
     <form action="#" id="settings-form">
         <div class="row d-grid gap-2">
 
