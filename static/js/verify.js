@@ -6,7 +6,9 @@ const verifyPhoneLabel = document.querySelector("#verify-phone-label");
 const phoneLabelIcon = document.querySelector("#phone-label-icon");
 
 const sendPhoneVerification = () => {
-  log(`Sending phone verification code\n`);
+  if (verifyPhoneInput.value) {
+    log(`Sending phone verification code\n`);
+  }
 };
 
 const verifyPhoneButtonHandler = () => {
@@ -53,6 +55,11 @@ function phoneVerificationResponse(response) {
       "class",
       "bi bi-telephone-fill fw-bold fs-3 text-success"
     );
+    addAttribute(verifyPhoneInput, "type", "number");
+    addAttribute(verifyPhoneInput, "min", "1");
+    addAttribute(verifyPhoneInput, "max", "999999");
+    addAttribute(verifyPhoneInput, "step", "1");
+
     verifyPhoneButton.classList.remove("btn-danger");
     verifyPhoneButton.classList.add("btn-success");
     verifyPhoneButton.innerText = "Submit";
@@ -88,7 +95,9 @@ const verifyEmailLabel = document.querySelector("#verify-email-label");
 const emailLabelIcon = document.querySelector("#email-label-icon");
 
 const sendEmailVerification = () => {
-  log(`Sending email verification code\n`);
+  if (verifyEmailInput.value) {
+    log(`Sending email verification code\n`);
+  }
 };
 
 const verifyEmailButtonHandler = () => {
@@ -135,6 +144,11 @@ function emailVerificationResponse(response) {
       "class",
       "bi bi-envelope-at-fill fw-bold fs-3 text-success"
     );
+    addAttribute(verifyEmailInput, "type", "number");
+    addAttribute(verifyEmailInput, "min", "1");
+    addAttribute(verifyEmailInput, "max", "999999");
+    addAttribute(verifyEmailInput, "step", "1");
+
     verifyEmailButton.classList.remove("btn-danger");
     verifyEmailButton.classList.add("btn-success");
     verifyEmailButton.innerText = "Submit";
