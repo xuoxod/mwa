@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"math/rand"
 	"strings"
 	"time"
 )
@@ -77,4 +78,17 @@ func TS() string {
 
 func Print(msg string) {
 	fmt.Println(msg)
+}
+
+func GenerateRandomNumber() (int, error) {
+	min := 111111
+	max := 999999
+	return min + rand.Intn(max-min), nil
+}
+
+func CopyrightDate() string {
+	d := time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 12, 30, 0, 0, time.UTC)
+	year, _, _ := d.Date()
+
+	return fmt.Sprintf("RmediaTech %v", year)
 }

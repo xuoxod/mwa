@@ -339,6 +339,81 @@ func (m *Respository) VerifyEmail(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// @desc        Verify Phone Post
+// @route       POST /user/phone/verify
+// @access      Private
+func (m *Respository) VerifyEmailPost(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Post verify email")
+
+	obj := make(map[string]interface{})
+
+	err := r.ParseForm()
+
+	if err != nil {
+		fmt.Printf("\n\tError parsing phone verification form")
+		helpers.ServerError(w, err)
+		return
+	}
+
+	// form validation
+	form := forms.New(r.PostForm)
+	form.Required("email")
+
+	if !form.Valid() {
+		log.Printf("Email form error: %s\n\n", form.Errors.Get("email"))
+		obj["ok"] = false
+		obj["form"] = form.Errors.Get("email")
+
+		out, err := json.MarshalIndent(obj, "", " ")
+
+		if err != nil {
+			log.Println(err)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(200)
+		_, rErr := w.Write(out)
+
+		if rErr != nil {
+			log.Println(err)
+		}
+		return
+	}
+
+	user, userOk := m.App.Session.Get(r.Context(), "user_id").(models.User)
+
+	if !userOk {
+		log.Println("Cannot get user_id data from session")
+		m.App.ErrorLog.Println("Can't get user_id data from the session")
+		m.App.Session.Put(r.Context(), "error", "Can't get user_id data from session")
+		http.Redirect(w, r, "/user", http.StatusTemporaryRedirect)
+		return
+	}
+
+	user.EmailVerified = true
+
+	m.App.Session.Remove(r.Context(), "user_id")
+	m.App.Session.Put(r.Context(), "user_id", user)
+
+	fmt.Println("Email verified? ", user.EmailVerified)
+
+	obj["ok"] = true
+
+	out, err := json.MarshalIndent(obj, "", " ")
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, rErr := w.Write(out)
+
+	if rErr != nil {
+		log.Println(err)
+	}
+}
+
 // @desc        Verify Phone
 // @route       GET /user/phone/verify
 // @access      Private
@@ -346,6 +421,81 @@ func (m *Respository) VerifyPhone(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Get verify phone")
 
 	obj := make(map[string]interface{})
+	obj["ok"] = true
+
+	out, err := json.MarshalIndent(obj, "", " ")
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, rErr := w.Write(out)
+
+	if rErr != nil {
+		log.Println(err)
+	}
+}
+
+// @desc        Verify Phone Post
+// @route       POST /user/phone/verify
+// @access      Private
+func (m *Respository) VerifyPhonePost(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Post verify phone")
+
+	obj := make(map[string]interface{})
+
+	err := r.ParseForm()
+
+	if err != nil {
+		fmt.Printf("\n\tError parsing phone verification form")
+		helpers.ServerError(w, err)
+		return
+	}
+
+	// form validation
+	form := forms.New(r.PostForm)
+	form.Required("phone")
+
+	if !form.Valid() {
+		log.Printf("Phone form error: %s\n\n", form.Errors.Get("phone"))
+		obj["ok"] = false
+		obj["form"] = form.Errors.Get("phone")
+
+		out, err := json.MarshalIndent(obj, "", " ")
+
+		if err != nil {
+			log.Println(err)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(200)
+		_, rErr := w.Write(out)
+
+		if rErr != nil {
+			log.Println(err)
+		}
+		return
+	}
+
+	user, userOk := m.App.Session.Get(r.Context(), "user_id").(models.User)
+
+	if !userOk {
+		log.Println("Cannot get user_id data from session")
+		m.App.ErrorLog.Println("Can't get user_id data from the session")
+		m.App.Session.Put(r.Context(), "error", "Can't get user_id data from session")
+		http.Redirect(w, r, "/user", http.StatusTemporaryRedirect)
+		return
+	}
+
+	user.PhoneVerified = true
+
+	m.App.Session.Remove(r.Context(), "user_id")
+	m.App.Session.Put(r.Context(), "user_id", user)
+
+	fmt.Println("Phone verified? ", user.PhoneVerified)
+
 	obj["ok"] = true
 
 	out, err := json.MarshalIndent(obj, "", " ")

@@ -22,7 +22,8 @@ var views = jet.NewHTMLSet(filepath.Join(root, "views"))
 func InitViews() {
 	views.SetDevelopmentMode(true)
 	views.AddGlobal("appver", "0.0.3")
-	views.AddGlobal("copyright", fmt.Sprintf("RmediaTech %s", utils.DS()))
+	// views.AddGlobal("copyright", fmt.Sprintf("RmediaTech %s", utils.DS()))
+	views.AddGlobal("copyright", utils.CopyrightDate())
 	views.AddGlobal("appname", "Awesome Web App")
 	views.AddGlobal("appdate", fmt.Sprintf("%v", utils.DateTimeStamp()))
 }

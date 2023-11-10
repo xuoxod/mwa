@@ -1,7 +1,7 @@
 {{block documentBody()}}
 <div class="container-fluid px-5 py-5 bg-light">
-    <div class="row align-items-start gap-3">
-        {{if !.user.PhoneVerified}}
+    <div class="row align-items-center justify-content-evenly">
+        {{if !.user.PhoneVerified == true}}
         <div class="col-12 justify-content-start">
             <form id="verify-phone-form" class="d-block">
                 <input type="hidden" name="csrf_token" class="form-control" value="{{.csrftoken}}">
@@ -10,8 +10,8 @@
                         <i id="phone-label-icon" class="bi bi-telephone-fill text-danger fs-3"></i>
                     </span>
 
-                    <input id="verify-phone-input" name="phone" type="text" class="form-control d-none"> <span
-                        id="verify-phone-label" class="input-group-text fw-bold bg-transparent">
+                    <input id="verify-phone-input" name="phone" type="text" class="form-control d-none">
+                    <span id="verify-phone-label" class="input-group-text fw-bold bg-transparent">
                         <button id="verify-phone-button" type="button" class="btn btn-danger fw-bold">
                             Verify Phone
                         </button>
@@ -42,8 +42,26 @@
         {{end}}
 
         {{if .user.EmailVerified && .user.PhoneVerified}}
-        <div class="col-12">
-            <p>
+        <div class="col-12 col-md-4 border rounded px-2">
+            <p class="text-wrap m-auto">
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Corporis tenetur fuga magni aliquam molestias
+                quam quas perspiciatis, minus veritatis veniam debitis aut. Id ullam quisquam natus, rerum aut officia
+                voluptatibus.
+            </p>
+        </div>
+
+        <div class="col-12 col-md-4 border rounded px-2">
+            <p class="text-wrap m-auto">orem ipsum dolor, sit amet consectetur adipisicing elit. Corporis tenetur fuga
+                magni
+                aliquam molestias
+                quam quas perspiciatis, minus veritatis veniam debitis aut. Id ullam quisquam natus, rerum aut officia
+                v
+                Loluptatibus.
+            </p>
+        </div>
+
+        <div class="col-12 col-md-4 border rounded px-2">
+            <p class="text-wrap m-auto">
                 Lorem ipsum dolor, sit amet consectetur adipisicing elit. Corporis tenetur fuga magni aliquam molestias
                 quam quas perspiciatis, minus veritatis veniam debitis aut. Id ullam quisquam natus, rerum aut officia
                 voluptatibus.

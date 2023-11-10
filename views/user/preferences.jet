@@ -3,6 +3,8 @@
     <form action="#" id="settings-form">
         <div class="row d-grid gap-2">
 
+                <input type="hidden" name="csrf_token" class="form-control" value="{{.csrftoken}}">
+
             <div class="input-group input-group-lg mb-4">
                 <div class="input-group-text">
                     <input class="form-check-input mt-0" type="checkbox" {{if .preferences.EnableSmsNotifications}} checked

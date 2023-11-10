@@ -5,9 +5,41 @@ const verifyPhoneInput = document.querySelector("#verify-phone-input");
 const verifyPhoneLabel = document.querySelector("#verify-phone-label");
 const phoneLabelIcon = document.querySelector("#phone-label-icon");
 
+const handlePhoneVerificationFormError = (data) => {
+  log(`Phone Verification Failed\n`);
+  log(`Phone Verification Form Error:\t${data["form"]}\n`);
+  notify("error", `Phone verification failed with message ${data["form"]}`);
+};
+
+const handlePhoneVerificationFormSuccess = (data) => {
+  log(`Phone Verification Succeeded\n`);
+  notify("success", `Phone verification successful`);
+  location.href = "/user/settings";
+};
+
 const sendPhoneVerification = () => {
   if (verifyPhoneInput.value) {
     log(`Sending phone verification code\n`);
+    const formData = new FormData(verifyPhoneForm);
+
+    try {
+      fetch("/user/phone/verify", {
+        method: "post",
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data["ok"] == false) {
+            handlePhoneVerificationFormError(data);
+          } else {
+            handlePhoneVerificationFormSuccess();
+          }
+        });
+    } catch (err) {
+      log(err);
+    }
+
+    verifyPhoneInput.value = "";
   }
 };
 
@@ -94,9 +126,41 @@ const verifyEmailInput = document.querySelector("#verify-email-input");
 const verifyEmailLabel = document.querySelector("#verify-email-label");
 const emailLabelIcon = document.querySelector("#email-label-icon");
 
+const handleEmailVerificationFormError = (data) => {
+  log(`Email Verification Failed\n`);
+  log(`Email Verification Form Error:\t${data["form"]}\n`);
+  notify("error", `Email verification failed with message ${data["form"]}`);
+};
+
+const handleEmailVerificationFormSuccess = (data) => {
+  log(`Email Verification Succeeded\n`);
+  notify("success", `Email verification successful`);
+  location.href = "/user/settings";
+};
+
 const sendEmailVerification = () => {
   if (verifyEmailInput.value) {
     log(`Sending email verification code\n`);
+    const formData = new FormData(verifyEmailForm);
+
+    try {
+      fetch("/user/email/verify", {
+        method: "post",
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data["ok"] == false) {
+            handleEmailVerificationFormError(data);
+          } else {
+            handleEmailVerificationFormSuccess();
+          }
+        });
+    } catch (err) {
+      log(err);
+    }
+
+    verifyEmailInput.value = "";
   }
 };
 
@@ -177,6 +241,10 @@ function emailVerificationResponse(response) {
 }
 
 // Register click event
-verifyPhoneButton.addEventListener("click", verifyPhoneButtonHandler);
+if (verifyPhoneButton) {
+  verifyPhoneButton.addEventListener("click", verifyPhoneButtonHandler);
+}
 
-verifyEmailButton.addEventListener("click", verifyEmailButtonHandler);
+if (verifyEmailButton) {
+  verifyEmailButton.addEventListener("click", verifyEmailButtonHandler);
+}

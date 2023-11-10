@@ -35,7 +35,9 @@ func routes() http.Handler {
 		mux.Post("/settings", handlers.Repo.PreferencesPost)
 		mux.Get("/settings", handlers.Repo.Settings)
 		mux.Get("/email/verify", handlers.Repo.VerifyEmail)
+		mux.Post("/email/verify", handlers.Repo.VerifyEmailPost)
 		mux.Get("/phone/verify", handlers.Repo.VerifyPhone)
+		mux.Post("/phone/verify", handlers.Repo.VerifyPhonePost)
 	})
 
 	/* 	mux.Route("/chat", func(mux chi.Router) {
