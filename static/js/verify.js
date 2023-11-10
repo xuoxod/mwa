@@ -14,7 +14,11 @@ const handlePhoneVerificationFormError = (data) => {
 const handlePhoneVerificationFormSuccess = (data) => {
   log(`Phone Verification Succeeded\n`);
   notify("success", `Phone verification successful`);
-  location.href = "/user/settings";
+
+  const timeout = setTimeout(() => {
+    clearTimeout(timeout);
+    location.href = "/user/settings";
+  }, 4000);
 };
 
 const sendPhoneVerification = () => {
@@ -134,8 +138,12 @@ const handleEmailVerificationFormError = (data) => {
 
 const handleEmailVerificationFormSuccess = (data) => {
   log(`Email Verification Succeeded\n`);
-  notify("success", `Email verification successful`);
-  location.href = "/user/settings";
+  notify("success", `Email verification successful`, 4);
+
+  const timeout = setTimeout(() => {
+    clearTimeout(timeout);
+    location.href = "/user/settings";
+  }, 4000);
 };
 
 const sendEmailVerification = () => {

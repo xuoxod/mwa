@@ -184,11 +184,11 @@ const newElement = (type) => {
 // notify display a custom alert to user
 // type string: success, error or warning
 // msg string: message to user
-const notify = (type, msg) => {
+const notify = (type, msg, time = 3) => {
   notie.alert({
     type: type,
     text: msg,
-    time: 4,
+    time,
   });
 };
 
