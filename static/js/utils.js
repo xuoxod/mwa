@@ -188,7 +188,7 @@ const notify = (type, msg, time = 3) => {
   notie.alert({
     type: type,
     text: msg,
-    time,
+    time: time,
   });
 };
 

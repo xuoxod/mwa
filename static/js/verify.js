@@ -16,7 +16,6 @@ const handlePhoneVerificationFormSuccess = (data) => {
   notify("success", `Phone verification successful`);
 
   const timeout = setTimeout(() => {
-    clearTimeout(timeout);
     location.href = "/user/settings";
   }, 4000);
 };
@@ -138,7 +137,7 @@ const handleEmailVerificationFormError = (data) => {
 
 const handleEmailVerificationFormSuccess = (data) => {
   log(`Email Verification Succeeded\n`);
-  notify("success", `Email verification successful`, 4);
+  notify("success", `Email verification successful`);
 
   const timeout = setTimeout(() => {
     clearTimeout(timeout);
