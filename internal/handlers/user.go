@@ -377,7 +377,6 @@ func (m *Respository) VerifyEmailPost(w http.ResponseWriter, r *http.Request) {
 		if rErr != nil {
 			log.Println(err)
 		}
-		return
 	}
 
 	user, userOk := m.App.Session.Get(r.Context(), "user_id").(models.User)
