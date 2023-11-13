@@ -42,7 +42,7 @@
         {{end}}
 
         {{if .user.EmailVerified && .user.PhoneVerified}}
-        <div class="col-12 col-md-4 border rounded px-2">
+        <div class="col-12 col-md-4 border rounded px-2 mb-3" style="max-width: 560px;">
             <p class="text-wrap m-auto">
                 Lorem ipsum dolor, sit amet consectetur adipisicing elit. Corporis tenetur fuga magni aliquam molestias
                 quam quas perspiciatis, minus veritatis veniam debitis aut. Id ullam quisquam natus, rerum aut officia
@@ -50,7 +50,7 @@
             </p>
         </div>
 
-        <div class="col-12 col-md-4 border rounded px-2">
+        <div class="col-12 col-md-4 border rounded px-2 mb-3" style="max-width: 560px;">
             <p class="text-wrap m-auto">orem ipsum dolor, sit amet consectetur adipisicing elit. Corporis tenetur fuga
                 magni
                 aliquam molestias
@@ -60,7 +60,7 @@
             </p>
         </div>
 
-        <div class="col-12 col-md-4 border rounded px-2">
+        <div class="col-12 col-md-4 border rounded px-2 mb-3" style="max-width: 560px;">
             <p class="text-wrap m-auto">
                 Lorem ipsum dolor, sit amet consectetur adipisicing elit. Corporis tenetur fuga magni aliquam molestias
                 quam quas perspiciatis, minus veritatis veniam debitis aut. Id ullam quisquam natus, rerum aut officia

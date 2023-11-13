@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/CloudyKit/jet/v6"
 	"github.com/justinas/nosurf"
 	"github.com/xuoxod/mwa/internal/config"
 	"github.com/xuoxod/mwa/internal/driver"
@@ -92,7 +91,7 @@ func (m *Respository) Register(w http.ResponseWriter, r *http.Request) {
 	obj["csrftoken"] = nosurf.Token(r)
 	obj["registrationform"] = emptyRegistrationForm
 	obj["form"] = forms.New(nil)
-	obj["title"] = "Registration"
+	obj["title"] = "Register"
 
 	if regDataOk {
 		data["error"] = regData.Data["error"]
@@ -161,7 +160,7 @@ func (m *Respository) PostRegister(w http.ResponseWriter, r *http.Request) {
 		userId, err := m.DB.CreateUser(registration)
 
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("Account with that email already exists")
 			sErr := err.Error()
 			uniqueErr := strings.HasSuffix(sErr, "(SQLSTATE 23505)")
 
@@ -171,7 +170,7 @@ func (m *Respository) PostRegister(w http.ResponseWriter, r *http.Request) {
 
 				regErrData := make(map[string]string)
 				regErrData["title"] = "Home"
-				regErrData["error"] = "Authentication Error"
+				regErrData["error"] = "Registration Error"
 				regErrData["type"] = "error"
 				regErrData["msg"] = "Account already exists"
 
@@ -179,13 +178,13 @@ func (m *Respository) PostRegister(w http.ResponseWriter, r *http.Request) {
 				m.App.Session.Put(r.Context(), "reg-error", registrationErrData)
 			}
 
-			vars := make(jet.VarMap)
+			/* vars := make(jet.VarMap)
 			vars.Set("title", "Registration")
 
 			data := make(map[string]interface{})
 			data["csrftoken"] = nosurf.Token(r)
 			data["registrationform"] = registration
-			data["form"] = form
+			data["form"] = form */
 
 			http.Redirect(w, r, "/register", http.StatusSeeOther)
 			return

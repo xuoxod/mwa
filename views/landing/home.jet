@@ -20,7 +20,7 @@
                     </div>
 
                     {{if .form.Errors.Get("email")}}
-                    <label class="text-danger"> {{.form.Errors.Get("email")}}</label>
+                    <label class="text-danger fw-bold"> {{.form.Errors.Get("email")}}</label>
                     {{end}}
                 </div>
 
@@ -38,7 +38,7 @@
                         </div>
 
                         {{if .form.Errors.Get("password")}}
-                        <label class="text-danger"> {{.form.Errors.Get("password")}}</label>
+                        <label class="text-danger fw-bold"> {{.form.Errors.Get("password")}}</label>
                         {{end}}
                     </div>
 

@@ -21,7 +21,11 @@
 
     <link href="/static/css/style.css" rel="stylesheet">
 
+    {{if .title == "Settings"}}
+    <link rel="icon" href="/static/favicon-settings.ico">
+    {{else}}
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    {{end}}
 
     <title>
         {{ if (isset(.title)) == true }}

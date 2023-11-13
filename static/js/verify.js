@@ -17,7 +17,7 @@ const handlePhoneVerificationFormSuccess = (data) => {
 
   const timeout = setTimeout(() => {
     location.href = "/user/settings";
-  }, 4000);
+  }, 3000);
 };
 
 const sendPhoneVerification = () => {
@@ -142,7 +142,7 @@ const handleEmailVerificationFormSuccess = (data) => {
   const timeout = setTimeout(() => {
     clearTimeout(timeout);
     location.href = "/user/settings";
-  }, 4000);
+  }, 3000);
 };
 
 const sendEmailVerification = () => {
